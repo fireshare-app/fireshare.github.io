@@ -158,8 +158,11 @@
       /* Screenshot carousel */
       .screenshots-track {
         display: flex;
-        gap: 2rem;
         transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+      }
+      .screenshots-track > div {
+        min-width: 100%;
+        box-sizing: border-box;
       }
 
       /* Code block styling */
@@ -529,13 +532,15 @@
           </div>
           <!-- Right: Hero screenshot -->
           <div class="fade-up relative">
-            <div
-              class="relative rounded-2xl overflow-hidden screenshot-glow gradient-border"
-            >
+            <div class="relative lg:scale-125 lg:origin-center">
               <img
-                src="assets/images/card-view.png"
+                src="assets/images/hero.png"
                 alt="Fireshare Dashboard"
-                class="w-full rounded-2xl"
+                class="w-full drop-shadow-[0_20px_40px_rgba(0,0,0,0.5)]"
+                style="
+                  filter: drop-shadow(0 0 40px rgb(var(--accent-500) / 0.15))
+                    drop-shadow(0 25px 50px rgba(0, 0, 0, 0.4));
+                "
                 loading="lazy"
               />
             </div>
@@ -922,85 +927,149 @@
           </p>
         </div>
 
-        <!-- Screenshot Grid -->
-        <div class="grid md:grid-cols-2 gap-8">
-          <div class="fade-up group">
-            <div
-              class="rounded-2xl overflow-hidden screenshot-glow gradient-border"
-            >
-              <img
-                src="assets/images/card-view.png"
-                alt="Dashboard Card View"
-                class="w-full"
-                loading="lazy"
-              />
+        <!-- Screenshot Carousel -->
+        <div class="fade-up relative max-w-4xl mx-auto">
+          <div class="overflow-hidden rounded-2xl">
+            <div id="screenshots-track" class="screenshots-track">
+              <div class="px-2">
+                <div
+                  class="rounded-2xl overflow-hidden screenshot-glow gradient-border"
+                >
+                  <img
+                    src="assets/images/cards.png"
+                    alt="Dashboard Card View"
+                    class="w-full"
+                    loading="lazy"
+                  />
+                </div>
+              </div>
+              <div class="px-2">
+                <div
+                  class="rounded-2xl overflow-hidden screenshot-glow gradient-border"
+                >
+                  <img
+                    src="assets/images/games.png"
+                    alt="Game Organization"
+                    class="w-full"
+                    loading="lazy"
+                  />
+                </div>
+              </div>
+              <div class="px-2">
+                <div
+                  class="rounded-2xl overflow-hidden screenshot-glow gradient-border"
+                >
+                  <img
+                    src="assets/images/editing.png"
+                    alt="Video Editing &amp; Details"
+                    class="w-full"
+                    loading="lazy"
+                  />
+                </div>
+              </div>
+              <div class="px-2">
+                <div
+                  class="rounded-2xl overflow-hidden screenshot-glow gradient-border"
+                >
+                  <img
+                    src="assets/images/uploading.png"
+                    alt="Video Uploading"
+                    class="w-full"
+                    loading="lazy"
+                  />
+                </div>
+              </div>
+              <div class="px-2">
+                <div
+                  class="rounded-2xl overflow-hidden screenshot-glow gradient-border"
+                >
+                  <img
+                    src="assets/images/file-manager.png"
+                    alt="File Manager"
+                    class="w-full"
+                    loading="lazy"
+                  />
+                </div>
+              </div>
             </div>
-            <p class="mt-4 text-center text-gray-400 text-sm font-medium">
-              Dashboard — Card View
-            </p>
           </div>
-          <div class="fade-up group">
-            <div
-              class="rounded-2xl overflow-hidden screenshot-glow gradient-border"
-            >
-              <img
-                src="assets/images/folders.png"
-                alt="Game Organization"
-                class="w-full"
-                loading="lazy"
-              />
-            </div>
-            <p class="mt-4 text-center text-gray-400 text-sm font-medium">
-              Automatic Game Organization
-            </p>
-          </div>
-          <div class="fade-up group">
-            <div
-              class="rounded-2xl overflow-hidden screenshot-glow gradient-border"
-            >
-              <img
-                src="assets/images/folders-game.png"
-                alt="Game Folder Contents"
-                class="w-full"
-                loading="lazy"
-              />
-            </div>
-            <p class="mt-4 text-center text-gray-400 text-sm font-medium">
-              Game Folder Contents
-            </p>
-          </div>
-          <div class="fade-up group">
-            <div
-              class="rounded-2xl overflow-hidden screenshot-glow gradient-border"
-            >
-              <img
-                src="assets/images/edit-details.png"
-                alt="Video Details"
-                class="w-full"
-                loading="lazy"
-              />
-            </div>
-            <p class="mt-4 text-center text-gray-400 text-sm font-medium">
-              Video Details &amp; Editing
-            </p>
-          </div>
-        </div>
 
-        <!-- Open Graph Preview -->
-        <div class="fade-up mt-12 max-w-lg mx-auto">
-          <div
-            class="rounded-2xl overflow-hidden screenshot-glow gradient-border"
+          <!-- Caption -->
+          <p
+            id="screenshot-caption"
+            class="mt-6 text-center text-gray-400 text-sm font-medium transition-opacity duration-300"
           >
-            <img
-              src="assets/images/ogg-data.png"
-              alt="Open Graph Preview"
-              class="w-full"
-              loading="lazy"
-            />
-          </div>
-          <p class="mt-4 text-center text-gray-400 text-sm font-medium">
-            Rich Link Previews (Open Graph)
+            Dashboard — Card View
           </p>
+
+          <!-- Navigation arrows -->
+          <button
+            id="ss-prev"
+            class="hidden sm:block absolute top-1/2 -translate-y-1/2 sm:-left-14 p-2.5 rounded-full bg-dark-800/80 border border-white/10 text-gray-400 hover:text-white hover:bg-white/10 transition-all backdrop-blur-sm"
+            aria-label="Previous screenshot"
+          >
+            <svg
+              class="w-5 h-5"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M15 19l-7-7 7-7"
+              />
+            </svg>
+          </button>
+          <button
+            id="ss-next"
+            class="hidden sm:block absolute top-1/2 -translate-y-1/2 sm:-right-14 p-2.5 rounded-full bg-dark-800/80 border border-white/10 text-gray-400 hover:text-white hover:bg-white/10 transition-all backdrop-blur-sm"
+            aria-label="Next screenshot"
+          >
+            <svg
+              class="w-5 h-5"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M9 5l7 7-7 7"
+              />
+            </svg>
+          </button>
+
+          <!-- Dots -->
+          <div id="ss-dots" class="flex justify-center gap-2 mt-6">
+            <button
+              class="w-2 h-2 rounded-full bg-fire-500 transition-all"
+              data-index="0"
+              aria-label="Slide 1"
+            ></button>
+            <button
+              class="w-2 h-2 rounded-full bg-white/20 hover:bg-white/40 transition-all"
+              data-index="1"
+              aria-label="Slide 2"
+            ></button>
+            <button
+              class="w-2 h-2 rounded-full bg-white/20 hover:bg-white/40 transition-all"
+              data-index="2"
+              aria-label="Slide 3"
+            ></button>
+            <button
+              class="w-2 h-2 rounded-full bg-white/20 hover:bg-white/40 transition-all"
+              data-index="3"
+              aria-label="Slide 4"
+            ></button>
+            <button
+              class="w-2 h-2 rounded-full bg-white/20 hover:bg-white/40 transition-all"
+              data-index="4"
+              aria-label="Slide 5"
+            ></button>
+          </div>
         </div>
       </div>
     </section>
@@ -1441,11 +1510,67 @@
       );
 
       document.querySelectorAll(".fade-up").forEach((el, i) => {
-        if (el.closest("#features .grid") || el.closest("#screenshots .grid")) {
+        if (el.closest("#features .grid")) {
           el.dataset.delay = (i % 4) * 100;
         }
         observer.observe(el);
       });
+
+      // ── Screenshot carousel ──
+      (() => {
+        const track = document.getElementById("screenshots-track");
+        const captions = [
+          "Dashboard — Card View",
+          "Game Organization",
+          "Video Editing & Details",
+          "Video Uploading",
+          "File Manager",
+        ];
+        const captionEl = document.getElementById("screenshot-caption");
+        const dots = document.querySelectorAll("#ss-dots button");
+        const prevBtn = document.getElementById("ss-prev");
+        const nextBtn = document.getElementById("ss-next");
+        const total = captions.length;
+        let current = 0;
+
+        function goTo(index) {
+          current = ((index % total) + total) % total;
+          track.style.transform = `translateX(-${current * 100}%)`;
+          captionEl.textContent = captions[current];
+          dots.forEach((d, i) => {
+            d.className =
+              i === current
+                ? "w-2.5 h-2.5 rounded-full bg-fire-500 transition-all"
+                : "w-2 h-2 rounded-full bg-white/20 hover:bg-white/40 transition-all";
+          });
+        }
+
+        prevBtn.addEventListener("click", () => goTo(current - 1));
+        nextBtn.addEventListener("click", () => goTo(current + 1));
+        dots.forEach((d) =>
+          d.addEventListener("click", () => goTo(Number(d.dataset.index))),
+        );
+
+        // Swipe support
+        let startX = 0;
+        track.addEventListener(
+          "touchstart",
+          (e) => {
+            startX = e.touches[0].clientX;
+          },
+          { passive: true },
+        );
+        track.addEventListener("touchend", (e) => {
+          const diff = startX - e.changedTouches[0].clientX;
+          if (Math.abs(diff) > 50) goTo(current + (diff > 0 ? 1 : -1));
+        });
+
+        // Keyboard support
+        document.addEventListener("keydown", (e) => {
+          if (e.key === "ArrowLeft") goTo(current - 1);
+          if (e.key === "ArrowRight") goTo(current + 1);
+        });
+      })();
 
       // ── Smooth scroll offset for fixed nav ──
       document.querySelectorAll('a[href^="#"]').forEach((anchor) => {
