@@ -989,14 +989,14 @@
             <div
               class="flex items-center gap-3 px-4 py-3 bg-dark-900/80 border-b border-white/5"
             >
-              <div class="flex gap-1.5">
+              <div class="hidden sm:flex gap-1.5">
                 <div class="w-3 h-3 rounded-full bg-red-500/80"></div>
                 <div class="w-3 h-3 rounded-full bg-yellow-500/80"></div>
                 <div class="w-3 h-3 rounded-full bg-green-500/80"></div>
               </div>
-              <div class="flex-1 flex justify-center">
+              <div class="flex-1 flex justify-center min-w-0">
                 <div
-                  class="flex items-center gap-2 bg-dark-800/60 rounded-md px-3 py-1 text-xs text-gray-500 max-w-md w-full justify-center"
+                  class="flex items-center gap-2 bg-dark-800/60 rounded-md px-3 py-1 text-xs text-gray-500 w-full justify-center min-w-0"
                 >
                   <svg
                     class="w-3 h-3 text-green-500 shrink-0"
@@ -1016,7 +1016,7 @@
                   >
                 </div>
               </div>
-              <div class="w-[54px]"></div>
+              <div class="hidden sm:block w-[54px]"></div>
             </div>
             <!-- Video player -->
             <div class="bg-black">
@@ -1033,10 +1033,10 @@
             </div>
             <!-- Video info bar -->
             <div
-              class="flex items-center justify-between px-4 py-3 bg-dark-900/80 border-t border-white/5"
+              class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 sm:gap-3 px-4 py-3 bg-dark-900/80 border-t border-white/5"
             >
-              <div class="flex items-center gap-3">
-                <picture>
+              <div class="flex items-center gap-3 min-w-0">
+                <picture class="shrink-0">
                   <source srcset="assets/images/logo.webp" type="image/webp" />
                   <img
                     src="assets/images/logo.png"
@@ -1044,11 +1044,13 @@
                     class="h-5"
                   />
                 </picture>
-                <span class="text-sm text-white font-medium"
+                <span class="text-sm text-white font-medium truncate"
                   >Dude had 4 surveyor vaults!</span
                 >
               </div>
-              <div class="flex items-center gap-3">
+              <div
+                class="flex items-center gap-3 justify-between sm:justify-end"
+              >
                 <!-- Quality selector -->
                 <div class="relative" id="quality-wrapper">
                   <button
