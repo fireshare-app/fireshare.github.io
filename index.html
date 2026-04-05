@@ -1415,6 +1415,81 @@
       </div>
     </footer>
 
+    <!-- ===== LIGHTBOX MODAL ===== -->
+    <div
+      id="lightbox"
+      class="fixed inset-0 z-[100] hidden items-center justify-center bg-black/90 backdrop-blur-sm"
+      style="display: none"
+    >
+      <button
+        id="lb-close"
+        class="absolute top-4 right-4 p-2 rounded-full bg-white/10 hover:bg-white/20 text-white transition-all z-10"
+        aria-label="Close"
+      >
+        <svg
+          class="w-6 h-6"
+          fill="none"
+          stroke="currentColor"
+          viewBox="0 0 24 24"
+        >
+          <path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="2"
+            d="M6 18L18 6M6 6l12 12"
+          />
+        </svg>
+      </button>
+      <button
+        id="lb-prev"
+        class="absolute left-4 top-1/2 -translate-y-1/2 p-2.5 rounded-full bg-white/10 hover:bg-white/20 text-white transition-all z-10"
+        aria-label="Previous"
+      >
+        <svg
+          class="w-6 h-6"
+          fill="none"
+          stroke="currentColor"
+          viewBox="0 0 24 24"
+        >
+          <path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="2"
+            d="M15 19l-7-7 7-7"
+          />
+        </svg>
+      </button>
+      <button
+        id="lb-next"
+        class="absolute right-4 top-1/2 -translate-y-1/2 p-2.5 rounded-full bg-white/10 hover:bg-white/20 text-white transition-all z-10"
+        aria-label="Next"
+      >
+        <svg
+          class="w-6 h-6"
+          fill="none"
+          stroke="currentColor"
+          viewBox="0 0 24 24"
+        >
+          <path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="2"
+            d="M9 5l7 7-7 7"
+          />
+        </svg>
+      </button>
+      <img
+        id="lb-img"
+        class="max-w-[90vw] max-h-[85vh] rounded-xl object-contain"
+        src=""
+        alt=""
+      />
+      <p
+        id="lb-caption"
+        class="absolute bottom-6 left-0 right-0 text-center text-white text-sm font-medium"
+      ></p>
+    </div>
+
     <!-- ===== SCRIPTS ===== -->
     <script>
       // ── Theme switching ──
@@ -1575,6 +1650,80 @@
         document.addEventListener("keydown", (e) => {
           if (e.key === "ArrowLeft") goTo(current - 1);
           if (e.key === "ArrowRight") goTo(current + 1);
+        });
+
+        // ── Lightbox ──
+        const lightbox = document.getElementById("lightbox");
+        const lbImg = document.getElementById("lb-img");
+        const lbCaption = document.getElementById("lb-caption");
+        const lbClose = document.getElementById("lb-close");
+        const lbPrev = document.getElementById("lb-prev");
+        const lbNext = document.getElementById("lb-next");
+        const images = Array.from(track.querySelectorAll("img"));
+        let lbOpen = false;
+
+        function openLightbox(index) {
+          current = index;
+          lbImg.src = images[current].src;
+          lbCaption.textContent = captions[current];
+          lightbox.style.display = "flex";
+          lbOpen = true;
+          document.body.style.overflow = "hidden";
+        }
+
+        function closeLightbox() {
+          lightbox.style.display = "none";
+          lbOpen = false;
+          document.body.style.overflow = "";
+          goTo(current);
+        }
+
+        function lbGoTo(index) {
+          current = ((index % total) + total) % total;
+          lbImg.src = images[current].src;
+          lbCaption.textContent = captions[current];
+          goTo(current);
+        }
+
+        images.forEach((img, i) => {
+          img.style.cursor = "pointer";
+          img.addEventListener("click", () => openLightbox(i));
+        });
+
+        lbClose.addEventListener("click", closeLightbox);
+        lbPrev.addEventListener("click", () => lbGoTo(current - 1));
+        lbNext.addEventListener("click", () => lbGoTo(current + 1));
+        lightbox.addEventListener("click", (e) => {
+          if (e.target === lightbox) closeLightbox();
+        });
+
+        // Lightbox swipe
+        let lbStartX = 0;
+        lightbox.addEventListener(
+          "touchstart",
+          (e) => {
+            lbStartX = e.touches[0].clientX;
+          },
+          { passive: true },
+        );
+        lightbox.addEventListener("touchend", (e) => {
+          const diff = lbStartX - e.changedTouches[0].clientX;
+          if (Math.abs(diff) > 50) lbGoTo(current + (diff > 0 ? 1 : -1));
+        });
+
+        // Keyboard: Escape to close, arrows to navigate (when open)
+        const origKeydown = document.onkeydown;
+        document.addEventListener("keydown", (e) => {
+          if (!lbOpen) return;
+          if (e.key === "Escape") closeLightbox();
+          if (e.key === "ArrowLeft") {
+            e.stopImmediatePropagation();
+            lbGoTo(current - 1);
+          }
+          if (e.key === "ArrowRight") {
+            e.stopImmediatePropagation();
+            lbGoTo(current + 1);
+          }
         });
       })();
 
