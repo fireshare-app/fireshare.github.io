@@ -1,0 +1,555 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Fireshare — Self-Hosted Video Sharing</title>
+  <meta name="description" content="Share your game clips, videos, or other media via unique links. Self-hosted, open-source, and fully under your control." />
+  <meta property="og:title" content="Fireshare — Self-Hosted Video Sharing" />
+  <meta property="og:description" content="Share your game clips, videos, or other media via unique links. Self-hosted, open-source, and fully under your control." />
+  <meta property="og:type" content="website" />
+  <meta property="og:image" content="assets/images/logo_square.png" />
+  <link rel="icon" href="favicon.ico" />
+  <link rel="apple-touch-icon" href="apple-touch-icon.png" />
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            fire: {
+              50: '#fff7ed',
+              100: '#ffedd5',
+              200: '#fed7aa',
+              300: '#fdba74',
+              400: '#fb923c',
+              500: '#f97316',
+              600: '#ea580c',
+              700: '#c2410c',
+              800: '#9a3412',
+              900: '#7c2d12',
+            },
+            dark: {
+              700: '#1e1e2e',
+              800: '#181825',
+              900: '#11111b',
+              950: '#0b0b14',
+            }
+          }
+        }
+      }
+    }
+  </script>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
+    body { font-family: 'Inter', sans-serif; }
+
+    /* Smooth gradient bg */
+    .hero-gradient {
+      background: radial-gradient(ellipse at 30% 0%, rgba(249,115,22,0.12) 0%, transparent 60%),
+                  radial-gradient(ellipse at 70% 100%, rgba(249,115,22,0.06) 0%, transparent 50%);
+    }
+
+    /* Screenshot card glow */
+    .screenshot-glow {
+      box-shadow: 0 0 60px -12px rgba(249,115,22,0.15), 0 25px 50px -12px rgba(0,0,0,0.5);
+    }
+
+    /* Animated gradient border */
+    .gradient-border {
+      position: relative;
+    }
+    .gradient-border::before {
+      content: '';
+      position: absolute;
+      inset: -1px;
+      border-radius: inherit;
+      padding: 1px;
+      background: linear-gradient(135deg, rgba(249,115,22,0.4), transparent 50%, rgba(249,115,22,0.2));
+      -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+      mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+      -webkit-mask-composite: xor;
+      mask-composite: exclude;
+    }
+
+    /* Feature card hover */
+    .feature-card {
+      transition: transform 0.25s ease, box-shadow 0.25s ease;
+    }
+    .feature-card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 20px 40px -12px rgba(0,0,0,0.4);
+    }
+
+    /* Fade-in animations */
+    .fade-up {
+      opacity: 0;
+      transform: translateY(30px);
+      transition: opacity 0.7s ease, transform 0.7s ease;
+    }
+    .fade-up.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    /* Screenshot carousel */
+    .screenshots-track {
+      display: flex;
+      gap: 2rem;
+      transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    /* Code block styling */
+    .code-block {
+      background: #0d0d1a;
+      border: 1px solid rgba(249,115,22,0.15);
+    }
+
+    /* Nav blur */
+    .nav-blur {
+      backdrop-filter: blur(16px) saturate(180%);
+      -webkit-backdrop-filter: blur(16px) saturate(180%);
+    }
+  </style>
+</head>
+<body class="bg-dark-950 text-gray-200 antialiased overflow-x-hidden">
+
+  <!-- ===== NAVIGATION ===== -->
+  <nav class="fixed top-0 left-0 right-0 z-50 nav-blur bg-dark-950/80 border-b border-white/5">
+    <div class="max-w-7xl mx-auto flex items-center justify-between px-6 py-4">
+      <a href="#" class="flex items-center gap-3 group">
+        <img src="assets/images/logo.png" alt="Fireshare Logo" class="h-10 w-auto" />
+        <span class="text-xl font-bold text-white group-hover:text-fire-400 transition-colors">Fireshare</span>
+      </a>
+      <div class="hidden md:flex items-center gap-8 text-sm font-medium">
+        <a href="#features" class="text-gray-400 hover:text-white transition-colors">Features</a>
+        <a href="#screenshots" class="text-gray-400 hover:text-white transition-colors">Screenshots</a>
+        <a href="#install" class="text-gray-400 hover:text-white transition-colors">Install</a>
+        <a href="https://v.fireshare.net" target="_blank" rel="noopener noreferrer" class="text-gray-400 hover:text-white transition-colors">Live Demo</a>
+      </div>
+      <div class="flex items-center gap-3">
+        <a href="https://github.com/ShaneIsrael/fireshare" target="_blank" rel="noopener noreferrer"
+           class="flex items-center gap-2 px-4 py-2 rounded-lg bg-white/5 hover:bg-white/10 border border-white/10 text-sm font-medium transition-all">
+          <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M12 0C5.374 0 0 5.373 0 12c0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23A11.509 11.509 0 0112 5.803c1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576C20.566 21.797 24 17.3 24 12c0-6.627-5.373-12-12-12z"/></svg>
+          <span class="hidden sm:inline">GitHub</span>
+        </a>
+        <!-- Mobile menu toggle -->
+        <button id="mobile-menu-btn" class="md:hidden p-2 rounded-lg hover:bg-white/10 transition-colors" aria-label="Toggle menu">
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/></svg>
+        </button>
+      </div>
+    </div>
+    <!-- Mobile menu -->
+    <div id="mobile-menu" class="hidden md:hidden border-t border-white/5 px-6 py-4 space-y-3">
+      <a href="#features" class="block text-gray-400 hover:text-white transition-colors text-sm font-medium">Features</a>
+      <a href="#screenshots" class="block text-gray-400 hover:text-white transition-colors text-sm font-medium">Screenshots</a>
+      <a href="#install" class="block text-gray-400 hover:text-white transition-colors text-sm font-medium">Install</a>
+      <a href="https://v.fireshare.net" target="_blank" rel="noopener noreferrer" class="block text-gray-400 hover:text-white transition-colors text-sm font-medium">Live Demo</a>
+    </div>
+  </nav>
+
+  <!-- ===== HERO ===== -->
+  <section class="hero-gradient relative min-h-screen flex items-center pt-20">
+    <div class="max-w-7xl mx-auto px-6 py-24 md:py-32 w-full">
+      <div class="grid lg:grid-cols-2 gap-12 lg:gap-16 items-center">
+        <!-- Left: Copy -->
+        <div class="fade-up">
+          <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-fire-500/10 border border-fire-500/20 text-fire-400 text-xs font-semibold mb-6 tracking-wide uppercase">
+            <span class="w-1.5 h-1.5 rounded-full bg-fire-400 animate-pulse"></span>
+            Open Source &amp; Self-Hosted
+          </div>
+          <h1 class="text-4xl sm:text-5xl lg:text-6xl font-extrabold text-white leading-tight tracking-tight">
+            Share your videos<br />
+            <span class="bg-gradient-to-r from-fire-400 to-fire-600 bg-clip-text text-transparent">on your terms.</span>
+          </h1>
+          <p class="mt-6 text-lg text-gray-400 leading-relaxed max-w-xl">
+            Fireshare is a self-hosted video sharing platform. Share game clips, personal videos, or any media through unique links — with full control over your content, privacy, and data.
+          </p>
+          <div class="mt-10 flex flex-wrap gap-4">
+            <a href="#install"
+               class="inline-flex items-center gap-2 px-6 py-3 rounded-xl bg-gradient-to-r from-fire-500 to-fire-600 hover:from-fire-400 hover:to-fire-500 text-white font-semibold shadow-lg shadow-fire-500/25 transition-all text-sm">
+              <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/></svg>
+              Get Started
+            </a>
+            <a href="https://v.fireshare.net" target="_blank" rel="noopener noreferrer"
+               class="inline-flex items-center gap-2 px-6 py-3 rounded-xl bg-white/5 hover:bg-white/10 border border-white/10 text-white font-semibold transition-all text-sm">
+              <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+              Live Demo
+            </a>
+            <a href="https://github.com/ShaneIsrael/fireshare" target="_blank" rel="noopener noreferrer"
+               class="inline-flex items-center gap-2 px-6 py-3 rounded-xl bg-white/5 hover:bg-white/10 border border-white/10 text-white font-semibold transition-all text-sm">
+              <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M12 0C5.374 0 0 5.373 0 12c0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23A11.509 11.509 0 0112 5.803c1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576C20.566 21.797 24 17.3 24 12c0-6.627-5.373-12-12-12z"/></svg>
+              View Source
+            </a>
+          </div>
+          <!-- Quick stats -->
+          <div class="mt-12 flex gap-8 text-sm">
+            <div>
+              <div class="text-2xl font-bold text-white">Docker</div>
+              <div class="text-gray-500">Ready to deploy</div>
+            </div>
+            <div class="w-px bg-white/10"></div>
+            <div>
+              <div class="text-2xl font-bold text-white">100%</div>
+              <div class="text-gray-500">Open Source</div>
+            </div>
+            <div class="w-px bg-white/10"></div>
+            <div>
+              <div class="text-2xl font-bold text-white">Your Data</div>
+              <div class="text-gray-500">Your control</div>
+            </div>
+          </div>
+        </div>
+        <!-- Right: Hero screenshot -->
+        <div class="fade-up relative">
+          <div class="relative rounded-2xl overflow-hidden screenshot-glow gradient-border">
+            <img src="assets/images/card-view.png" alt="Fireshare Dashboard" class="w-full rounded-2xl" loading="lazy" />
+          </div>
+          <!-- Floating accent dots -->
+          <div class="absolute -top-4 -right-4 w-24 h-24 bg-fire-500/10 rounded-full blur-2xl"></div>
+          <div class="absolute -bottom-8 -left-8 w-32 h-32 bg-fire-500/5 rounded-full blur-3xl"></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== FEATURES ===== -->
+  <section id="features" class="relative py-24 md:py-32">
+    <div class="max-w-7xl mx-auto px-6">
+      <div class="text-center fade-up mb-16">
+        <h2 class="text-3xl sm:text-4xl font-extrabold text-white">Everything you need to share video</h2>
+        <p class="mt-4 text-gray-400 text-lg max-w-2xl mx-auto">Packed with features to organize, share, and manage your video library — all from your own server.</p>
+      </div>
+      <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
+        <!-- Feature 1 -->
+        <div class="feature-card fade-up rounded-2xl bg-dark-800/60 border border-white/5 p-6">
+          <div class="w-10 h-10 rounded-lg bg-fire-500/10 flex items-center justify-center mb-4">
+            <svg class="w-5 h-5 text-fire-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1"/></svg>
+          </div>
+          <h3 class="text-white font-semibold text-lg">Unique Shareable Links</h3>
+          <p class="mt-2 text-gray-400 text-sm leading-relaxed">Every video gets its own unique link. Share individual clips anywhere — on Discord, social media, or with friends.</p>
+        </div>
+        <!-- Feature 2 -->
+        <div class="feature-card fade-up rounded-2xl bg-dark-800/60 border border-white/5 p-6">
+          <div class="w-10 h-10 rounded-lg bg-fire-500/10 flex items-center justify-center mb-4">
+            <svg class="w-5 h-5 text-fire-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/></svg>
+          </div>
+          <h3 class="text-white font-semibold text-lg">Public &amp; Private Feeds</h3>
+          <p class="mt-2 text-gray-400 text-sm leading-relaxed">Choose what's public and what's private. Private videos are accessible only through their direct link.</p>
+        </div>
+        <!-- Feature 3 -->
+        <div class="feature-card fade-up rounded-2xl bg-dark-800/60 border border-white/5 p-6">
+          <div class="w-10 h-10 rounded-lg bg-fire-500/10 flex items-center justify-center mb-4">
+            <svg class="w-5 h-5 text-fire-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"/></svg>
+          </div>
+          <h3 class="text-white font-semibold text-lg">Game Organization</h3>
+          <p class="mt-2 text-gray-400 text-sm leading-relaxed">Automatically organizes your clips by game with cover art powered by SteamGridDB integration.</p>
+        </div>
+        <!-- Feature 4 -->
+        <div class="feature-card fade-up rounded-2xl bg-dark-800/60 border border-white/5 p-6">
+          <div class="w-10 h-10 rounded-lg bg-fire-500/10 flex items-center justify-center mb-4">
+            <svg class="w-5 h-5 text-fire-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 18h.01M8 21h8a2 2 0 002-2V5a2 2 0 00-2-2H8a2 2 0 00-2 2v14a2 2 0 002 2z"/></svg>
+          </div>
+          <h3 class="text-white font-semibold text-lg">Mobile Friendly</h3>
+          <p class="mt-2 text-gray-400 text-sm leading-relaxed">Fully responsive design that works beautifully on phones and tablets. Manage your library on the go.</p>
+        </div>
+        <!-- Feature 5 -->
+        <div class="feature-card fade-up rounded-2xl bg-dark-800/60 border border-white/5 p-6">
+          <div class="w-10 h-10 rounded-lg bg-fire-500/10 flex items-center justify-center mb-4">
+            <svg class="w-5 h-5 text-fire-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"/></svg>
+          </div>
+          <h3 class="text-white font-semibold text-lg">Upload Support</h3>
+          <p class="mt-2 text-gray-400 text-sm leading-relaxed">Upload videos directly through the web interface. Optionally restrict uploads to admin users only.</p>
+        </div>
+        <!-- Feature 6 -->
+        <div class="feature-card fade-up rounded-2xl bg-dark-800/60 border border-white/5 p-6">
+          <div class="w-10 h-10 rounded-lg bg-fire-500/10 flex items-center justify-center mb-4">
+            <svg class="w-5 h-5 text-fire-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z"/></svg>
+          </div>
+          <h3 class="text-white font-semibold text-lg">Tags &amp; Search</h3>
+          <p class="mt-2 text-gray-400 text-sm leading-relaxed">Tag your videos for categorization and find any clip fast with powerful search and filtering.</p>
+        </div>
+        <!-- Feature 7 -->
+        <div class="feature-card fade-up rounded-2xl bg-dark-800/60 border border-white/5 p-6">
+          <div class="w-10 h-10 rounded-lg bg-fire-500/10 flex items-center justify-center mb-4">
+            <svg class="w-5 h-5 text-fire-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/></svg>
+          </div>
+          <h3 class="text-white font-semibold text-lg">View Counting</h3>
+          <p class="mt-2 text-gray-400 text-sm leading-relaxed">Track how many times each video has been watched with built-in view counting analytics.</p>
+        </div>
+        <!-- Feature 8 -->
+        <div class="feature-card fade-up rounded-2xl bg-dark-800/60 border border-white/5 p-6">
+          <div class="w-10 h-10 rounded-lg bg-fire-500/10 flex items-center justify-center mb-4">
+            <svg class="w-5 h-5 text-fire-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4"/></svg>
+          </div>
+          <h3 class="text-white font-semibold text-lg">Open Graph Previews</h3>
+          <p class="mt-2 text-gray-400 text-sm leading-relaxed">Rich link previews on Discord, Twitter, Slack, and more. Shared links look great everywhere.</p>
+        </div>
+        <!-- Feature 9 -->
+        <div class="feature-card fade-up rounded-2xl bg-dark-800/60 border border-white/5 p-6">
+          <div class="w-10 h-10 rounded-lg bg-fire-500/10 flex items-center justify-center mb-4">
+            <svg class="w-5 h-5 text-fire-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/></svg>
+          </div>
+          <h3 class="text-white font-semibold text-lg">Video Transcoding</h3>
+          <p class="mt-2 text-gray-400 text-sm leading-relaxed">Optional transcoding with CPU or NVIDIA GPU support for maximum browser compatibility.</p>
+        </div>
+        <!-- Feature 10 -->
+        <div class="feature-card fade-up rounded-2xl bg-dark-800/60 border border-white/5 p-6">
+          <div class="w-10 h-10 rounded-lg bg-fire-500/10 flex items-center justify-center mb-4">
+            <svg class="w-5 h-5 text-fire-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"/></svg>
+          </div>
+          <h3 class="text-white font-semibold text-lg">Discord Notifications</h3>
+          <p class="mt-2 text-gray-400 text-sm leading-relaxed">Get notified on Discord or via custom webhooks whenever a new video is uploaded to your Fireshare instance.</p>
+        </div>
+        <!-- Feature 11 -->
+        <div class="feature-card fade-up rounded-2xl bg-dark-800/60 border border-white/5 p-6">
+          <div class="w-10 h-10 rounded-lg bg-fire-500/10 flex items-center justify-center mb-4">
+            <svg class="w-5 h-5 text-fire-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 5c7.18 0 13 5.82 13 13M6 11a7 7 0 017 7m-6 0a1 1 0 110-2 1 1 0 010 2z"/></svg>
+          </div>
+          <h3 class="text-white font-semibold text-lg">RSS Feed</h3>
+          <p class="mt-2 text-gray-400 text-sm leading-relaxed">Subscribe to new public videos via RSS. Perfect for integrating with other services and automations.</p>
+        </div>
+        <!-- Feature 12 -->
+        <div class="feature-card fade-up rounded-2xl bg-dark-800/60 border border-white/5 p-6">
+          <div class="w-10 h-10 rounded-lg bg-fire-500/10 flex items-center justify-center mb-4">
+            <svg class="w-5 h-5 text-fire-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"/></svg>
+          </div>
+          <h3 class="text-white font-semibold text-lg">LDAP Support</h3>
+          <p class="mt-2 text-gray-400 text-sm leading-relaxed">Integrate with your existing LDAP/Active Directory for centralized authentication and user management.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== SCREENSHOTS ===== -->
+  <section id="screenshots" class="relative py-24 md:py-32 overflow-hidden">
+    <div class="absolute inset-0 bg-gradient-to-b from-dark-950 via-dark-900/50 to-dark-950"></div>
+    <div class="relative max-w-7xl mx-auto px-6">
+      <div class="text-center fade-up mb-16">
+        <h2 class="text-3xl sm:text-4xl font-extrabold text-white">See it in action</h2>
+        <p class="mt-4 text-gray-400 text-lg max-w-2xl mx-auto">A clean, modern interface for managing and sharing your video collection.</p>
+      </div>
+
+      <!-- Screenshot Grid -->
+      <div class="grid md:grid-cols-2 gap-8">
+        <div class="fade-up group">
+          <div class="rounded-2xl overflow-hidden screenshot-glow gradient-border">
+            <img src="assets/images/card-view.png" alt="Dashboard Card View" class="w-full" loading="lazy" />
+          </div>
+          <p class="mt-4 text-center text-gray-400 text-sm font-medium">Dashboard — Card View</p>
+        </div>
+        <div class="fade-up group">
+          <div class="rounded-2xl overflow-hidden screenshot-glow gradient-border">
+            <img src="assets/images/folders.png" alt="Game Organization" class="w-full" loading="lazy" />
+          </div>
+          <p class="mt-4 text-center text-gray-400 text-sm font-medium">Automatic Game Organization</p>
+        </div>
+        <div class="fade-up group">
+          <div class="rounded-2xl overflow-hidden screenshot-glow gradient-border">
+            <img src="assets/images/folders-game.png" alt="Game Folder Contents" class="w-full" loading="lazy" />
+          </div>
+          <p class="mt-4 text-center text-gray-400 text-sm font-medium">Game Folder Contents</p>
+        </div>
+        <div class="fade-up group">
+          <div class="rounded-2xl overflow-hidden screenshot-glow gradient-border">
+            <img src="assets/images/edit-details.png" alt="Video Details" class="w-full" loading="lazy" />
+          </div>
+          <p class="mt-4 text-center text-gray-400 text-sm font-medium">Video Details &amp; Editing</p>
+        </div>
+      </div>
+
+      <!-- Open Graph Preview -->
+      <div class="fade-up mt-12 max-w-lg mx-auto">
+        <div class="rounded-2xl overflow-hidden screenshot-glow gradient-border">
+          <img src="assets/images/ogg-data.png" alt="Open Graph Preview" class="w-full" loading="lazy" />
+        </div>
+        <p class="mt-4 text-center text-gray-400 text-sm font-medium">Rich Link Previews (Open Graph)</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== INSTALLATION ===== -->
+  <section id="install" class="relative py-24 md:py-32">
+    <div class="max-w-7xl mx-auto px-6">
+      <div class="text-center fade-up mb-16">
+        <h2 class="text-3xl sm:text-4xl font-extrabold text-white">Up and running in minutes</h2>
+        <p class="mt-4 text-gray-400 text-lg max-w-2xl mx-auto">Fireshare runs in Docker. Mount your directories, set a password, and you're done.</p>
+      </div>
+
+      <div class="grid lg:grid-cols-2 gap-8">
+        <!-- Docker Compose -->
+        <div class="fade-up">
+          <div class="rounded-2xl code-block p-6 overflow-x-auto">
+            <div class="flex items-center gap-2 mb-4">
+              <span class="w-3 h-3 rounded-full bg-red-500/80"></span>
+              <span class="w-3 h-3 rounded-full bg-yellow-500/80"></span>
+              <span class="w-3 h-3 rounded-full bg-green-500/80"></span>
+              <span class="ml-4 text-gray-500 text-xs font-mono">docker-compose.yml</span>
+            </div>
+<pre class="text-sm font-mono leading-relaxed"><code><span class="text-gray-500">version:</span> <span class="text-green-400">"3"</span>
+<span class="text-gray-500">services:</span>
+  <span class="text-fire-400">fireshare:</span>
+    <span class="text-gray-500">image:</span> <span class="text-green-400">shaneisrael/fireshare:latest</span>
+    <span class="text-gray-500">container_name:</span> <span class="text-green-400">fireshare</span>
+    <span class="text-gray-500">ports:</span>
+      - <span class="text-cyan-400">"8080:80"</span>
+    <span class="text-gray-500">environment:</span>
+      - <span class="text-cyan-400">ADMIN_PASSWORD=your-password</span>
+    <span class="text-gray-500">volumes:</span>
+      - <span class="text-cyan-400">./data:/data</span>
+      - <span class="text-cyan-400">./processed:/processed</span>
+      - <span class="text-cyan-400">/path/to/videos:/videos</span></code></pre>
+          </div>
+          <p class="mt-4 text-center text-gray-500 text-sm">Docker Compose — recommended</p>
+        </div>
+
+        <!-- Docker Run -->
+        <div class="fade-up">
+          <div class="rounded-2xl code-block p-6 overflow-x-auto">
+            <div class="flex items-center gap-2 mb-4">
+              <span class="w-3 h-3 rounded-full bg-red-500/80"></span>
+              <span class="w-3 h-3 rounded-full bg-yellow-500/80"></span>
+              <span class="w-3 h-3 rounded-full bg-green-500/80"></span>
+              <span class="ml-4 text-gray-500 text-xs font-mono">terminal</span>
+            </div>
+<pre class="text-sm font-mono leading-relaxed"><code><span class="text-gray-500">$</span> <span class="text-white">docker run</span> <span class="text-cyan-400">--name</span> fireshare \
+  <span class="text-cyan-400">-v</span> <span class="text-green-400">$(pwd)/data:/data</span> \
+  <span class="text-cyan-400">-v</span> <span class="text-green-400">$(pwd)/processed:/processed</span> \
+  <span class="text-cyan-400">-v</span> <span class="text-green-400">/path/to/videos:/videos</span> \
+  <span class="text-cyan-400">-p</span> <span class="text-fire-400">8080:80</span> \
+  <span class="text-cyan-400">-e</span> <span class="text-green-400">ADMIN_PASSWORD=your-password</span> \
+  <span class="text-cyan-400">-d</span> <span class="text-white">shaneisrael/fireshare:latest</span></code></pre>
+          </div>
+          <p class="mt-4 text-center text-gray-500 text-sm">Docker Run — quick start</p>
+        </div>
+      </div>
+
+      <!-- Steps -->
+      <div class="fade-up grid sm:grid-cols-3 gap-6 mt-16">
+        <div class="text-center p-6">
+          <div class="w-12 h-12 rounded-full bg-fire-500/10 border border-fire-500/20 flex items-center justify-center mx-auto mb-4">
+            <span class="text-fire-400 font-bold">1</span>
+          </div>
+          <h3 class="text-white font-semibold">Pull the image</h3>
+          <p class="mt-2 text-gray-400 text-sm">Available on Docker Hub as <code class="text-fire-400/80 text-xs">shaneisrael/fireshare</code></p>
+        </div>
+        <div class="text-center p-6">
+          <div class="w-12 h-12 rounded-full bg-fire-500/10 border border-fire-500/20 flex items-center justify-center mx-auto mb-4">
+            <span class="text-fire-400 font-bold">2</span>
+          </div>
+          <h3 class="text-white font-semibold">Mount your videos</h3>
+          <p class="mt-2 text-gray-400 text-sm">Point <code class="text-fire-400/80 text-xs">/videos</code> to your clips directory on the host</p>
+        </div>
+        <div class="text-center p-6">
+          <div class="w-12 h-12 rounded-full bg-fire-500/10 border border-fire-500/20 flex items-center justify-center mx-auto mb-4">
+            <span class="text-fire-400 font-bold">3</span>
+          </div>
+          <h3 class="text-white font-semibold">Open &amp; share</h3>
+          <p class="mt-2 text-gray-400 text-sm">Visit <code class="text-fire-400/80 text-xs">localhost:8080</code> and start sharing videos</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== CTA ===== -->
+  <section class="relative py-24 md:py-32">
+    <div class="absolute inset-0 bg-gradient-to-t from-dark-950 via-dark-900/50 to-dark-950"></div>
+    <div class="relative max-w-3xl mx-auto px-6 text-center fade-up">
+      <div class="rounded-3xl bg-dark-800/60 border border-white/5 p-12 md:p-16 gradient-border">
+        <img src="assets/images/logo.png" alt="Fireshare" class="h-20 mx-auto mb-6" />
+        <h2 class="text-3xl sm:text-4xl font-extrabold text-white">Ready to take control of your videos?</h2>
+        <p class="mt-4 text-gray-400 text-lg max-w-lg mx-auto">Deploy Fireshare on your own server and start sharing video clips in minutes. Free and open source, forever.</p>
+        <div class="mt-8 flex flex-wrap justify-center gap-4">
+          <a href="https://github.com/ShaneIsrael/fireshare" target="_blank" rel="noopener noreferrer"
+             class="inline-flex items-center gap-2 px-8 py-3.5 rounded-xl bg-gradient-to-r from-fire-500 to-fire-600 hover:from-fire-400 hover:to-fire-500 text-white font-semibold shadow-lg shadow-fire-500/25 transition-all">
+            <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M12 0C5.374 0 0 5.373 0 12c0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23A11.509 11.509 0 0112 5.803c1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576C20.566 21.797 24 17.3 24 12c0-6.627-5.373-12-12-12z"/></svg>
+            Get Started on GitHub
+          </a>
+          <a href="https://v.fireshare.net" target="_blank" rel="noopener noreferrer"
+             class="inline-flex items-center gap-2 px-8 py-3.5 rounded-xl bg-white/5 hover:bg-white/10 border border-white/10 text-white font-semibold transition-all">
+            Try the Demo
+          </a>
+        </div>
+        <div class="mt-8 flex justify-center gap-6 text-sm text-gray-500">
+          <a href="https://hub.docker.com/r/shaneisrael/fireshare" target="_blank" rel="noopener noreferrer" class="hover:text-gray-300 transition-colors flex items-center gap-1.5">
+            <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><path d="M13.983 11.078h2.119a.186.186 0 00.186-.185V9.006a.186.186 0 00-.186-.186h-2.119a.185.185 0 00-.185.185v1.888c0 .102.083.185.185.185m-2.954-5.43h2.118a.186.186 0 00.186-.186V3.574a.186.186 0 00-.186-.185h-2.118a.185.185 0 00-.185.185v1.888c0 .102.082.185.185.186m0 2.716h2.118a.187.187 0 00.186-.186V6.29a.186.186 0 00-.186-.185h-2.118a.185.185 0 00-.185.185v1.887c0 .102.082.185.185.186m-2.93 0h2.12a.186.186 0 00.184-.186V6.29a.185.185 0 00-.185-.185H8.1a.185.185 0 00-.185.185v1.887c0 .102.083.185.185.186m-2.964 0h2.119a.186.186 0 00.185-.186V6.29a.186.186 0 00-.185-.185H5.136a.186.186 0 00-.186.185v1.887c0 .102.084.185.186.186m5.893 2.715h2.118a.186.186 0 00.186-.185V9.006a.186.186 0 00-.186-.186h-2.118a.185.185 0 00-.185.185v1.888c0 .102.082.185.185.185m-2.93 0h2.12a.185.185 0 00.184-.185V9.006a.185.185 0 00-.184-.186h-2.12a.185.185 0 00-.184.185v1.888c0 .102.083.185.185.185m-2.964 0h2.119a.185.185 0 00.185-.185V9.006a.186.186 0 00-.185-.186H5.136a.186.186 0 00-.186.186v1.887c0 .102.084.185.186.185m-2.92 0h2.12a.185.185 0 00.184-.185V9.006a.186.186 0 00-.184-.186H2.216a.186.186 0 00-.186.186v1.887c0 .102.084.185.186.185m21.6 1.574c-.165-.18-.395-.285-.642-.285h-.012c-.21.015-.395.09-.54.218-.236.2-.536.38-.882.49-1.24.395-2.646.096-3.465-.236a6.074 6.074 0 01-.735-.39c-.36.51-.839.907-1.39 1.195a5.89 5.89 0 01-.802.336c-.17.058-.326.1-.465.13-.025.163-.044.334-.044.514 0 3.02 2.5 5.465 5.584 5.465S23.78 17.94 23.78 14.92c0-1.192-.394-2.297-1.064-3.195"/></svg>
+            Docker Hub
+          </a>
+          <a href="https://github.com/ShaneIsrael/fireshare/issues" target="_blank" rel="noopener noreferrer" class="hover:text-gray-300 transition-colors flex items-center gap-1.5">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+            Report a Bug
+          </a>
+          <a href="https://www.paypal.com/paypalme/shaneisrael" target="_blank" rel="noopener noreferrer" class="hover:text-gray-300 transition-colors flex items-center gap-1.5">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"/></svg>
+            Donate
+          </a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== FOOTER ===== -->
+  <footer class="border-t border-white/5 py-8">
+    <div class="max-w-7xl mx-auto px-6 flex flex-col sm:flex-row items-center justify-between gap-4 text-sm text-gray-500">
+      <div class="flex items-center gap-2">
+        <img src="assets/images/logo.png" alt="Fireshare" class="h-6" />
+        <span>Fireshare &mdash; Open source, self-hosted video sharing.</span>
+      </div>
+      <div class="flex items-center gap-4">
+        <a href="https://github.com/ShaneIsrael/fireshare" target="_blank" rel="noopener noreferrer" class="hover:text-gray-300 transition-colors">GitHub</a>
+        <a href="https://hub.docker.com/r/shaneisrael/fireshare" target="_blank" rel="noopener noreferrer" class="hover:text-gray-300 transition-colors">Docker Hub</a>
+        <a href="https://v.fireshare.net" target="_blank" rel="noopener noreferrer" class="hover:text-gray-300 transition-colors">Demo</a>
+      </div>
+    </div>
+  </footer>
+
+  <!-- ===== SCRIPTS ===== -->
+  <script>
+    // Mobile menu toggle
+    const menuBtn = document.getElementById('mobile-menu-btn');
+    const mobileMenu = document.getElementById('mobile-menu');
+    menuBtn.addEventListener('click', () => {
+      mobileMenu.classList.toggle('hidden');
+    });
+    // Close mobile menu on link click
+    mobileMenu.querySelectorAll('a').forEach(link => {
+      link.addEventListener('click', () => mobileMenu.classList.add('hidden'));
+    });
+
+    // Intersection Observer for fade-up animations
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach((entry, index) => {
+        if (entry.isIntersecting) {
+          // Stagger the animation slightly for grid items
+          const delay = entry.target.dataset.delay || 0;
+          setTimeout(() => {
+            entry.target.classList.add('visible');
+          }, delay);
+          observer.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.1, rootMargin: '0px 0px -40px 0px' });
+
+    document.querySelectorAll('.fade-up').forEach((el, i) => {
+      // Add stagger delay to feature cards
+      if (el.closest('#features .grid') || el.closest('#screenshots .grid')) {
+        el.dataset.delay = (i % 4) * 100;
+      }
+      observer.observe(el);
+    });
+
+    // Smooth scroll offset for fixed nav
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+      anchor.addEventListener('click', function (e) {
+        e.preventDefault();
+        const target = document.querySelector(this.getAttribute('href'));
+        if (target) {
+          const navHeight = 80;
+          const top = target.getBoundingClientRect().top + window.pageYOffset - navHeight;
+          window.scrollTo({ top, behavior: 'smooth' });
+        }
+      });
+    });
+  </script>
+</body>
+</html>
