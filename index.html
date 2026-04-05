@@ -17,15 +17,27 @@
     <meta property="og:image" content="assets/images/logo_square.png" />
     <meta property="og:url" content="https://fireshare.net" />
     <meta name="twitter:card" content="summary_large_image" />
-    <meta name="twitter:title" content="Fireshare — Self-Hosted Video Sharing" />
-    <meta name="twitter:description" content="Share your game clips, videos, or other media via unique links. Self-hosted, open-source, and fully under your control." />
-    <meta name="twitter:image" content="https://fireshare.net/assets/images/logo_square.png" />
+    <meta
+      name="twitter:title"
+      content="Fireshare — Self-Hosted Video Sharing"
+    />
+    <meta
+      name="twitter:description"
+      content="Share your game clips, videos, or other media via unique links. Self-hosted, open-source, and fully under your control."
+    />
+    <meta
+      name="twitter:image"
+      content="https://fireshare.net/assets/images/logo_square.png"
+    />
     <link rel="canonical" href="https://fireshare.net" />
     <link rel="icon" href="favicon.ico" />
     <link rel="apple-touch-icon" href="apple-touch-icon.png" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap"
+      rel="stylesheet"
+    />
     <!-- Early theme init to prevent flash -->
     <script>
       document.documentElement.setAttribute(
@@ -761,7 +773,10 @@
           </div>
         </div>
         <!-- Hidden features (7-12) -->
-        <div id="features-extra" class="grid sm:grid-cols-2 lg:grid-cols-3 gap-6 mt-6 hidden">
+        <div
+          id="features-extra"
+          class="grid sm:grid-cols-2 lg:grid-cols-3 gap-6 mt-6 hidden"
+        >
           <!-- Feature 7 -->
           <div
             class="feature-card fade-up rounded-2xl bg-dark-800/60 border border-white/5 p-6"
@@ -939,10 +954,180 @@
             class="inline-flex items-center gap-2 px-6 py-3 rounded-full border border-white/10 text-sm font-medium text-gray-400 hover:text-white hover:border-white/20 transition-all"
           >
             <span>Show all features</span>
-            <svg class="w-4 h-4 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+            <svg
+              class="w-4 h-4 transition-transform"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M19 9l-7 7-7-7"
+              />
             </svg>
           </button>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== LIVE DEMO ===== -->
+    <section class="relative py-24 md:py-32 overflow-hidden">
+      <div
+        class="absolute inset-0 bg-gradient-to-b from-dark-950 via-dark-900/50 to-dark-950"
+      ></div>
+      <div class="relative max-w-5xl mx-auto px-6">
+        <div class="text-center fade-up mb-12">
+          <span
+            class="inline-block px-3 py-1 rounded-full text-xs font-semibold tracking-wide uppercase bg-fire-500/10 text-fire-400 mb-4"
+            >Live from the demo server</span
+          >
+          <h2 class="text-3xl sm:text-4xl font-extrabold text-white">
+            Try it right now
+          </h2>
+          <p class="mt-4 text-gray-400 text-lg max-w-2xl mx-auto">
+            This video is streaming directly from a live Fireshare instance.
+            Press play to experience it for yourself.
+          </p>
+        </div>
+
+        <div class="fade-up">
+          <!-- Browser-style frame -->
+          <div
+            class="rounded-xl overflow-hidden border border-white/10 bg-dark-800/80 shadow-2xl"
+          >
+            <!-- Title bar -->
+            <div
+              class="flex items-center gap-3 px-4 py-3 bg-dark-900/80 border-b border-white/5"
+            >
+              <div class="flex gap-1.5">
+                <div class="w-3 h-3 rounded-full bg-red-500/80"></div>
+                <div class="w-3 h-3 rounded-full bg-yellow-500/80"></div>
+                <div class="w-3 h-3 rounded-full bg-green-500/80"></div>
+              </div>
+              <div class="flex-1 flex justify-center">
+                <div
+                  class="flex items-center gap-2 bg-dark-800/60 rounded-md px-3 py-1 text-xs text-gray-500 max-w-md w-full justify-center"
+                >
+                  <svg
+                    class="w-3 h-3 text-green-500 shrink-0"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      stroke-width="2"
+                      d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"
+                    />
+                  </svg>
+                  <span class="truncate"
+                    >v.fireshare.net/w/c35114e0f7a3675b47a987027fa523bd</span
+                  >
+                </div>
+              </div>
+              <div class="w-[54px]"></div>
+            </div>
+            <!-- Video player -->
+            <div class="bg-black">
+              <video
+                id="demo-video"
+                class="w-full aspect-video"
+                controls
+                preload="metadata"
+                poster="https://v.fireshare.net/_content/derived/c35114e0f7a3675b47a987027fa523bd/poster.jpg"
+              >
+                <source
+                  src=""
+                  type="video/mp4"
+                />
+                Your browser does not support the video element.
+              </video>
+            </div>
+            <!-- Video info bar -->
+            <div
+              class="flex items-center justify-between px-4 py-3 bg-dark-900/80 border-t border-white/5"
+            >
+              <div class="flex items-center gap-3">
+                <picture>
+                  <source srcset="assets/images/logo.webp" type="image/webp" />
+                  <img
+                    src="assets/images/logo.png"
+                    alt="Fireshare"
+                    class="h-5"
+                  />
+                </picture>
+                <span class="text-sm text-white font-medium"
+                  >Dude had 4 surveyor vaults!</span
+                >
+              </div>
+              <div class="flex items-center gap-3">
+                <!-- Quality selector -->
+                <div class="relative" id="quality-wrapper">
+                  <button
+                    id="quality-btn"
+                    class="flex items-center gap-1.5 px-2.5 py-1 rounded-md bg-dark-800/60 border border-white/10 text-xs text-gray-400 hover:text-white hover:border-white/20 transition-all"
+                  >
+                    <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.066 2.573c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.573 1.066c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.066-2.573c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" />
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                    </svg>
+                    <span id="quality-label"></span>
+                    <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+                    </svg>
+                  </button>
+                  <div
+                    id="quality-menu"
+                    class="hidden absolute bottom-full right-0 mb-2 py-1 rounded-lg bg-dark-800 border border-white/10 shadow-xl min-w-[100px] z-50"
+                  >
+                    <button data-quality="1440p" data-src="https://v.fireshare.net/_content/video/c35114e0f7a3675b47a987027fa523bd.mp4" class="quality-opt w-full text-left px-3 py-1.5 text-xs text-white hover:bg-white/10 transition-colors flex items-center justify-between">
+                      <span>1440p</span>
+                      <span class="text-[10px] text-gray-500 ml-2">Original</span>
+                    </button>
+                    <button data-quality="1080p" data-src="https://v.fireshare.net/_content/derived/c35114e0f7a3675b47a987027fa523bd/c35114e0f7a3675b47a987027fa523bd-1080p.mp4" class="quality-opt w-full text-left px-3 py-1.5 text-xs text-gray-400 hover:text-white hover:bg-white/10 transition-colors">1080p</button>
+                    <button data-quality="720p" data-src="https://v.fireshare.net/_content/derived/c35114e0f7a3675b47a987027fa523bd/c35114e0f7a3675b47a987027fa523bd-720p.mp4" class="quality-opt w-full text-left px-3 py-1.5 text-xs text-gray-400 hover:text-white hover:bg-white/10 transition-colors">720p</button>
+                    <button data-quality="480p" data-src="https://v.fireshare.net/_content/derived/c35114e0f7a3675b47a987027fa523bd/c35114e0f7a3675b47a987027fa523bd-480p.mp4" class="quality-opt w-full text-left px-3 py-1.5 text-xs text-gray-400 hover:text-white hover:bg-white/10 transition-colors">480p</button>
+                  </div>
+                </div>
+                <a
+                  href="https://v.fireshare.net/w/c35114e0f7a3675b47a987027fa523bd"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  class="text-xs text-fire-400 hover:text-fire-300 transition-colors flex items-center gap-1"
+                >
+                  Open on demo site
+                  <svg
+                    class="w-3 h-3"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      stroke-width="2"
+                      d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"
+                    />
+                  </svg>
+                </a>
+              </div>
+            </div>
+          </div>
+
+          <p class="text-center text-xs text-gray-600 mt-4">
+            Streaming from
+            <a
+              href="https://v.fireshare.net"
+              target="_blank"
+              rel="noopener noreferrer"
+              class="text-gray-500 hover:text-gray-400 underline underline-offset-2"
+              >v.fireshare.net</a
+            >
+            — the public Fireshare demo instance
+          </p>
         </div>
       </div>
     </section>
@@ -972,7 +1157,10 @@
                   class="rounded-xl overflow-hidden screenshot-glow gradient-border"
                 >
                   <picture>
-                    <source srcset="assets/images/cards.webp" type="image/webp" />
+                    <source
+                      srcset="assets/images/cards.webp"
+                      type="image/webp"
+                    />
                     <img
                       src="assets/images/cards.png"
                       alt="Dashboard Card View"
@@ -987,7 +1175,10 @@
                   class="rounded-xl overflow-hidden screenshot-glow gradient-border"
                 >
                   <picture>
-                    <source srcset="assets/images/games.webp" type="image/webp" />
+                    <source
+                      srcset="assets/images/games.webp"
+                      type="image/webp"
+                    />
                     <img
                       src="assets/images/games.png"
                       alt="Game Organization"
@@ -1002,7 +1193,10 @@
                   class="rounded-xl overflow-hidden screenshot-glow gradient-border"
                 >
                   <picture>
-                    <source srcset="assets/images/editing.webp" type="image/webp" />
+                    <source
+                      srcset="assets/images/editing.webp"
+                      type="image/webp"
+                    />
                     <img
                       src="assets/images/editing.png"
                       alt="Video Editing &amp; Details"
@@ -1017,7 +1211,10 @@
                   class="rounded-xl overflow-hidden screenshot-glow gradient-border"
                 >
                   <picture>
-                    <source srcset="assets/images/uploading.webp" type="image/webp" />
+                    <source
+                      srcset="assets/images/uploading.webp"
+                      type="image/webp"
+                    />
                     <img
                       src="assets/images/uploading.png"
                       alt="Video Uploading"
@@ -1032,7 +1229,10 @@
                   class="rounded-xl overflow-hidden screenshot-glow gradient-border"
                 >
                   <picture>
-                    <source srcset="assets/images/file-manager.webp" type="image/webp" />
+                    <source
+                      srcset="assets/images/file-manager.webp"
+                      type="image/webp"
+                    />
                     <img
                       src="assets/images/file-manager.png"
                       alt="File Manager"
@@ -1650,7 +1850,9 @@
 
       // ── Nav active state on scroll ──
       const navLinks = document.querySelectorAll("a.nav-link[data-nav]");
-      const sections = document.querySelectorAll("#features, #screenshots, #install");
+      const sections = document.querySelectorAll(
+        "#features, #screenshots, #install",
+      );
       const navObserver = new IntersectionObserver(
         (entries) => {
           entries.forEach((entry) => {
@@ -1688,6 +1890,67 @@
           });
         }
       });
+
+      // ── Demo video quality selector ──
+      (() => {
+        const video = document.getElementById("demo-video");
+        const btn = document.getElementById("quality-btn");
+        const menu = document.getElementById("quality-menu");
+        const label = document.getElementById("quality-label");
+        const opts = document.querySelectorAll(".quality-opt");
+
+        // Default to 720p on desktop, 480p on mobile
+        const defaultQuality = window.innerWidth < 768 ? "480p" : "720p";
+        const defaultOpt = Array.from(opts).find((o) => o.dataset.quality === defaultQuality);
+        if (defaultOpt) {
+          video.querySelector("source").src = defaultOpt.dataset.src;
+          video.load();
+          label.textContent = defaultQuality;
+          opts.forEach((o) => {
+            o.classList.toggle("text-white", o.dataset.quality === defaultQuality);
+            o.classList.toggle("text-gray-400", o.dataset.quality !== defaultQuality);
+          });
+        }
+
+        btn.addEventListener("click", (e) => {
+          e.stopPropagation();
+          menu.classList.toggle("hidden");
+        });
+
+        document.addEventListener("click", () => menu.classList.add("hidden"));
+        menu.addEventListener("click", (e) => e.stopPropagation());
+
+        opts.forEach((opt) => {
+          opt.addEventListener("click", () => {
+            const newSrc = opt.dataset.src;
+            const quality = opt.dataset.quality;
+            if (label.textContent === quality) {
+              menu.classList.add("hidden");
+              return;
+            }
+            const wasPlaying = !video.paused;
+            const currentTime = video.currentTime;
+
+            video.querySelector("source").src = newSrc;
+            video.load();
+            video.currentTime = currentTime;
+
+            const resume = () => {
+              video.currentTime = currentTime;
+              if (wasPlaying) video.play();
+              video.removeEventListener("canplay", resume);
+            };
+            video.addEventListener("canplay", resume);
+
+            label.textContent = quality;
+            opts.forEach((o) => {
+              o.classList.toggle("text-white", o.dataset.quality === quality);
+              o.classList.toggle("text-gray-400", o.dataset.quality !== quality);
+            });
+            menu.classList.add("hidden");
+          });
+        });
+      })();
 
       // ── Screenshot carousel ──
       (() => {
@@ -1756,7 +2019,8 @@
 
         function getLbSrc(i) {
           const picture = images[i].closest("picture");
-          const source = picture && picture.querySelector("source[type='image/webp']");
+          const source =
+            picture && picture.querySelector("source[type='image/webp']");
           return source ? source.srcset : images[i].src;
         }
 
