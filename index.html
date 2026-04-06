@@ -4,6 +4,7 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Fireshare — Self-Hosted Video Sharing</title>
+    <script defer src="https://umami.shaneisrael.net/script.js" data-website-id="54a348ce-9d04-4e70-80a4-e95338d1dd06"></script>
     <meta
       name="description"
       content="Share your game clips, videos, or other media via unique links. Self-hosted, open-source, and fully under your control."
@@ -254,11 +255,10 @@
             >Install</a
           >
           <a
-            href="https://v.fireshare.net"
-            target="_blank"
-            rel="noopener noreferrer"
-            class="text-gray-400 hover:text-white transition-colors"
-            >Live Demo</a
+            href="#demo"
+            data-nav="demo"
+            class="nav-link text-gray-400 hover:text-white transition-colors"
+            >Demo</a
           >
         </div>
         <div class="flex items-center gap-3">
@@ -370,11 +370,9 @@
           >Install</a
         >
         <a
-          href="https://v.fireshare.net"
-          target="_blank"
-          rel="noopener noreferrer"
+          href="#demo"
           class="block text-gray-400 hover:text-white transition-colors text-sm font-medium"
-          >Live Demo</a
+          >Demo</a
         >
       </div>
     </nav>
@@ -961,7 +959,7 @@
     </section>
 
     <!-- ===== LIVE DEMO ===== -->
-    <section class="relative py-24 md:py-32 overflow-hidden">
+    <section id="demo" class="relative py-24 md:py-32 overflow-hidden">
       <div
         class="absolute inset-0 bg-gradient-to-b from-dark-950 via-dark-900/50 to-dark-950"
       ></div>
@@ -1908,7 +1906,7 @@
       // ── Nav active state on scroll ──
       const navLinks = document.querySelectorAll("a.nav-link[data-nav]");
       const sections = document.querySelectorAll(
-        "#features, #screenshots, #install",
+        "#features, #screenshots, #install, #demo",
       );
       const navObserver = new IntersectionObserver(
         (entries) => {
