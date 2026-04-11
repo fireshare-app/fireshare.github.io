@@ -269,7 +269,12 @@
             target="_blank"
             rel="noopener noreferrer"
             class="text-fire-400 hover:text-white transition-colors flex items-center gap-1.5"
-            ><svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            ><svg
+              class="w-4 h-4"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
               <path
                 stroke-linecap="round"
                 stroke-linejoin="round"
@@ -397,7 +402,12 @@
           target="_blank"
           rel="noopener noreferrer"
           class="flex items-center gap-1.5 text-fire-400 hover:text-white transition-colors text-sm font-medium"
-          ><svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          ><svg
+            class="w-4 h-4"
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
+          >
             <path
               stroke-linecap="round"
               stroke-linejoin="round"
@@ -1541,7 +1551,8 @@
     <span class="text-gray-500">volumes:</span>
       - <span class="text-cyan-400">./fireshare/data:/data</span>
       - <span class="text-cyan-400">./fireshare/processed:/processed</span>
-      - <span class="text-cyan-400">./my/media/folder:/videos</span></code></pre>
+      - <span class="text-cyan-400">./my/videos/folder:/videos</span>
+      - <span class="text-cyan-400">./my/images/folder:/images</span></code></pre>
             </div>
             <p class="mt-4 text-center text-gray-500 text-sm">
               Docker Compose (recommended)
@@ -1591,7 +1602,8 @@
               ><code><span class="text-gray-500">$</span> <span class="text-white">docker run</span> <span class="text-cyan-400">--name</span> fireshare \
             <span class="text-cyan-400">-v</span> <span class="text-green-400">$(pwd)/fireshare/data:/data</span> \
             <span class="text-cyan-400">-v</span> <span class="text-green-400">$(pwd)/fireshare/processed:/processed</span> \
-            <span class="text-cyan-400">-v</span> <span class="text-green-400">./my/media/folder:/videos</span> \
+            <span class="text-cyan-400">-v</span> <span class="text-green-400">./my/videos/folder:/videos</span> \
+            <span class="text-cyan-400">-v</span> <span class="text-green-400">./my/images/folder:/images</span> \
             <span class="text-cyan-400">-p</span> <span class="text-fire-400">8080:80</span> \
             <span class="text-cyan-400">-e</span> <span class="text-green-400">ADMIN_USERNAME=admin</span> \
             <span class="text-cyan-400">-e</span> <span class="text-green-400">ADMIN_PASSWORD=admin</span> \
