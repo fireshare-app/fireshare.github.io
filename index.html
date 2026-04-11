@@ -438,7 +438,7 @@
             <h1
               class="text-4xl sm:text-5xl lg:text-6xl font-extrabold text-white leading-tight tracking-tight"
             >
-              Share your videos<br />
+              Share your media<br />
               <span
                 class="bg-gradient-to-r from-fire-400 to-fire-600 bg-clip-text text-transparent"
                 >with unique links.</span
@@ -447,9 +447,10 @@
             <p
               class="mt-6 text-lg text-gray-400 leading-relaxed max-w-xl mx-auto sm:mx-0"
             >
-              Fireshare is a self-hosted video sharing platform. Share game
-              clips, personal videos, or any media through unique links with
-              full control over your content, privacy, and data.
+              Fireshare is a self-hosted video and image sharing platform. Share
+              game clips, personal videos, screenshots, or any media through
+              unique links with full control over your content, privacy, and
+              data.
             </p>
             <div
               class="mt-10 flex flex-wrap justify-center sm:justify-start gap-3"
@@ -1269,7 +1270,25 @@
                     />
                     <img
                       src="assets/images/cards.png"
-                      alt="Dashboard Card View"
+                      alt="Dashboard Video View"
+                      class="w-full"
+                      loading="lazy"
+                    />
+                  </picture>
+                </div>
+              </div>
+              <div class="px-2">
+                <div
+                  class="rounded-xl overflow-hidden screenshot-glow gradient-border"
+                >
+                  <picture>
+                    <source
+                      srcset="assets/images/images.webp"
+                      type="image/webp"
+                    />
+                    <img
+                      src="assets/images/images.png"
+                      alt="Dashboard Images View"
                       class="w-full"
                       loading="lazy"
                     />
@@ -1356,7 +1375,7 @@
             id="screenshot-caption"
             class="mt-6 text-center text-gray-400 text-sm font-medium transition-opacity duration-300"
           >
-            Dashboard - Card View
+            Dashboard - Video View
           </p>
 
           <!-- Navigation arrows -->
@@ -1425,6 +1444,11 @@
               class="w-2 h-2 rounded-full bg-white/20 hover:bg-white/40 transition-all"
               data-index="4"
               aria-label="Slide 5"
+            ></button>
+            <button
+              class="w-2 h-2 rounded-full bg-white/20 hover:bg-white/40 transition-all"
+              data-index="5"
+              aria-label="Slide 6"
             ></button>
           </div>
         </div>
@@ -2089,6 +2113,7 @@
         const track = document.getElementById("screenshots-track");
         const captions = [
           "Dashboard - Card View",
+          "Dashboard - Images View",
           "Game Organization",
           "Video Editing & Details",
           "Video Uploading",
