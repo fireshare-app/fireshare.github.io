@@ -40,7 +40,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
-      href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap"
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Outfit:wght@700;800;900&display=swap"
       rel="stylesheet"
     />
     <!-- Early theme init to prevent flash -->
@@ -413,13 +413,13 @@
           Open source · Self-hosted
         </div>
         <h1
-          class="text-5xl sm:text-6xl lg:text-7xl font-black text-white leading-[1.05] tracking-tight"
+          class="text-5xl sm:text-6xl lg:text-7xl font-black text-white leading-[1.05] tracking-tight" style="font-family: 'Outfit', sans-serif;"
         >
-          Your media.<br />
-          Your server.<br />
+          Record it.<br />
+          Host it.<br />
           <span
             class="bg-gradient-to-r from-fire-400 to-fire-600 bg-clip-text text-transparent"
-            >Your links.</span
+            >Share it.</span
           >
         </h1>
         <p
@@ -1291,20 +1291,58 @@
           <div class="overflow-hidden rounded-xl">
             <div id="screenshots-track" class="screenshots-track">
               <div class="px-2">
-                <div
-                  class="rounded-xl overflow-hidden screenshot-glow gradient-border"
-                >
+                <div class="rounded-xl overflow-hidden screenshot-glow gradient-border">
                   <picture>
-                    <source
-                      srcset="assets/images/cards.webp"
-                      type="image/webp"
-                    />
-                    <img
-                      src="assets/images/cards.png"
-                      alt="Dashboard Video View"
-                      class="w-full"
-                      loading="lazy"
-                    />
+                    <source srcset="assets/images/cards.webp" type="image/webp" />
+                    <img src="assets/images/cards.png" alt="Dashboard Video View" class="w-full" loading="lazy" />
+                  </picture>
+                </div>
+              </div>
+              <div class="px-2">
+                <div class="rounded-xl overflow-hidden screenshot-glow gradient-border">
+                  <picture>
+                    <source srcset="assets/images/images-view.webp" type="image/webp" />
+                    <img src="assets/images/images-view.png" alt="Images View" class="w-full" loading="lazy" />
+                  </picture>
+                </div>
+              </div>
+              <div class="px-2">
+                <div class="rounded-xl overflow-hidden screenshot-glow gradient-border">
+                  <picture>
+                    <source srcset="assets/images/image-modal.webp" type="image/webp" />
+                    <img src="assets/images/image-modal.png" alt="Image Modal" class="w-full" loading="lazy" />
+                  </picture>
+                </div>
+              </div>
+              <div class="px-2">
+                <div class="rounded-xl overflow-hidden screenshot-glow gradient-border">
+                  <picture>
+                    <source srcset="assets/images/games.webp" type="image/webp" />
+                    <img src="assets/images/games.png" alt="Game Organization" class="w-full" loading="lazy" />
+                  </picture>
+                </div>
+              </div>
+              <div class="px-2">
+                <div class="rounded-xl overflow-hidden screenshot-glow gradient-border">
+                  <picture>
+                    <source srcset="assets/images/editing.webp" type="image/webp" />
+                    <img src="assets/images/editing.png" alt="Video Editing &amp; Details" class="w-full" loading="lazy" />
+                  </picture>
+                </div>
+              </div>
+              <div class="px-2">
+                <div class="rounded-xl overflow-hidden screenshot-glow gradient-border">
+                  <picture>
+                    <source srcset="assets/images/uploading.webp" type="image/webp" />
+                    <img src="assets/images/uploading.png" alt="Video Uploading" class="w-full" loading="lazy" />
+                  </picture>
+                </div>
+              </div>
+              <div class="px-2">
+                <div class="rounded-xl overflow-hidden screenshot-glow gradient-border">
+                  <picture>
+                    <source srcset="assets/images/file-manager.webp" type="image/webp" />
+                    <img src="assets/images/file-manager.png" alt="File Manager" class="w-full" loading="lazy" />
                   </picture>
                 </div>
               </div>
@@ -1314,84 +1352,12 @@
                 >
                   <picture>
                     <source
-                      srcset="assets/images/images.webp"
+                      srcset="assets/images/image-modal.webp"
                       type="image/webp"
                     />
                     <img
-                      src="assets/images/images.png"
-                      alt="Dashboard Images View"
-                      class="w-full"
-                      loading="lazy"
-                    />
-                  </picture>
-                </div>
-              </div>
-              <div class="px-2">
-                <div
-                  class="rounded-xl overflow-hidden screenshot-glow gradient-border"
-                >
-                  <picture>
-                    <source
-                      srcset="assets/images/games.webp"
-                      type="image/webp"
-                    />
-                    <img
-                      src="assets/images/games.png"
-                      alt="Game Organization"
-                      class="w-full"
-                      loading="lazy"
-                    />
-                  </picture>
-                </div>
-              </div>
-              <div class="px-2">
-                <div
-                  class="rounded-xl overflow-hidden screenshot-glow gradient-border"
-                >
-                  <picture>
-                    <source
-                      srcset="assets/images/editing.webp"
-                      type="image/webp"
-                    />
-                    <img
-                      src="assets/images/editing.png"
-                      alt="Video Editing &amp; Details"
-                      class="w-full"
-                      loading="lazy"
-                    />
-                  </picture>
-                </div>
-              </div>
-              <div class="px-2">
-                <div
-                  class="rounded-xl overflow-hidden screenshot-glow gradient-border"
-                >
-                  <picture>
-                    <source
-                      srcset="assets/images/uploading.webp"
-                      type="image/webp"
-                    />
-                    <img
-                      src="assets/images/uploading.png"
-                      alt="Video Uploading"
-                      class="w-full"
-                      loading="lazy"
-                    />
-                  </picture>
-                </div>
-              </div>
-              <div class="px-2">
-                <div
-                  class="rounded-xl overflow-hidden screenshot-glow gradient-border"
-                >
-                  <picture>
-                    <source
-                      srcset="assets/images/file-manager.webp"
-                      type="image/webp"
-                    />
-                    <img
-                      src="assets/images/file-manager.png"
-                      alt="File Manager"
+                      src="assets/images/image-modal.png"
+                      alt="Image Modal"
                       class="w-full"
                       loading="lazy"
                     />
@@ -1477,6 +1443,11 @@
               class="w-2 h-2 rounded-full bg-white/20 hover:bg-white/40 transition-all"
               data-index="5"
               aria-label="Slide 6"
+            ></button>
+            <button
+              class="w-2 h-2 rounded-full bg-white/20 hover:bg-white/40 transition-all"
+              data-index="6"
+              aria-label="Slide 7"
             ></button>
           </div>
         </div>
@@ -2098,7 +2069,8 @@
         const track = document.getElementById("screenshots-track");
         const captions = [
           "Dashboard - Card View",
-          "Dashboard - Images View",
+          "Images View",
+          "Image Modal",
           "Game Organization",
           "Video Editing & Details",
           "Video Uploading",
