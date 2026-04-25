@@ -1,0 +1,25 @@
+{
+  "name": "fireshare.github.io",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "build:css": "tailwindcss -i src/tailwind.css -o assets/tailwind.css --minify",
+    "watch:css": "tailwindcss -i src/tailwind.css -o assets/tailwind.css --watch"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ShaneIsrael/fireshare.github.io.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/ShaneIsrael/fireshare.github.io/issues"
+  },
+  "homepage": "https://github.com/ShaneIsrael/fireshare.github.io#readme",
+  "devDependencies": {
+    "tailwindcss": "^3.4.19"
+  }
+}
