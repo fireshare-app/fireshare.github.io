@@ -207,6 +207,20 @@
         background: linear-gradient(to top, #0b0b14, transparent);
         pointer-events: none;
       }
+
+      /* Buy Me a Coffee button */
+      .bmc-btn {
+        background-color: #ffdd00;
+        color: #11111b;
+        transition:
+          background-color 0.2s ease,
+          box-shadow 0.2s ease;
+      }
+
+      .bmc-btn:hover {
+        background-color: #ffe74d;
+        box-shadow: 0 8px 24px -10px rgba(255, 221, 0, 0.6);
+      }
     </style>
   </head>
 
@@ -277,6 +291,28 @@
           </a>
         </div>
         <div class="flex items-center gap-3">
+          <a
+            href="https://www.buymeacoffee.com/shaneisrael"
+            target="_blank"
+            rel="noopener noreferrer"
+            title="Buy me a coffee"
+            class="bmc-btn hidden lg:inline-flex items-center gap-2 px-3 py-1.5 rounded-lg text-sm font-semibold"
+          >
+            <svg
+              class="w-4 h-4"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M18 8h1a4 4 0 010 8h-1M2 8h16v9a4 4 0 01-4 4H6a4 4 0 01-4-4V8zm4-4h8"
+              />
+            </svg>
+            Buy me a coffee
+          </a>
           <!-- Theme picker — uncomment to enable
           <div class="relative" id="theme-toggle-wrapper">
             <button
@@ -388,6 +424,28 @@
             />
           </svg>
           Sponsor
+        </a>
+        <a
+          href="https://www.buymeacoffee.com/shaneisrael"
+          target="_blank"
+          rel="noopener noreferrer"
+          title="Buy me a coffee"
+          class="bmc-btn inline-flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-semibold"
+        >
+          <svg
+            class="w-4 h-4"
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M18 8h1a4 4 0 010 8h-1M2 8h16v9a4 4 0 01-4 4H6a4 4 0 01-4-4V8zm4-4h8"
+            />
+          </svg>
+          Buy me a coffee
         </a>
       </div>
     </nav>
@@ -1896,9 +1954,23 @@
               href="https://www.buymeacoffee.com/shaneisrael"
               target="_blank"
               rel="noopener noreferrer"
-              class="text-sm text-gray-600 hover:text-gray-400 transition-colors"
+              title="Buy me a coffee"
+              class="bmc-btn inline-flex items-center gap-2 px-6 py-3 rounded-xl text-sm font-semibold"
             >
-              or buy me a coffee
+              <svg
+                class="w-5 h-5"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M18 8h1a4 4 0 010 8h-1M2 8h16v9a4 4 0 01-4 4H6a4 4 0 01-4-4V8zm4-4h8"
+                />
+              </svg>
+              Buy me a coffee
             </a>
           </div>
         </div>
