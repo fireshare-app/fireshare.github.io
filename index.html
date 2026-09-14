@@ -26,7 +26,7 @@
     ></script>
     <meta
       name="description"
-      content="Fireshare turns a folder on your server into a video and image library where every file gets its own link. Originals are served untouched — no upload caps, no re-encoding, no expiry. One Docker container, GPLv3."
+      content="Self-host your game clips, videos and images. Every file gets its own shareable link — originals served untouched, no upload caps, no re-encoding, no expiry."
     />
     <meta
       property="og:title"
@@ -405,7 +405,7 @@
               Discord — and the file people watch is
               <strong class="text-gray-200 font-semibold"
                 >your original, untouched</strong
-              >. No upload caps. No re-encode. No expiry date.
+              >. No upload caps. No re-encoding. No expiry date.
             </p>
 
             <div class="mt-9 flex flex-wrap items-center gap-3">
@@ -690,7 +690,7 @@
                 </svg>
               </span>
               <h3 class="text-gray-300 font-semibold">
-                A clip site or chat upload
+                A clip site or a chat upload
               </h3>
             </div>
             <ul class="space-y-3.5 text-[14.5px] text-gray-500">
@@ -803,9 +803,8 @@
             <p class="mt-4 text-gray-400 leading-relaxed">
               Open a clip, grab its URL, and it plays in the browser for anyone
               you send it to — with a real title, thumbnail and inline player
-              when it unfurls in Discord, Slack or Twitter. Trim the boring
-              intro on the timeline first if you want; the original file is left
-              alone.
+              when it unfurls in Discord, Slack or Twitter. Trim the dead air
+              off the front first if you want — the crop is reversible.
             </p>
             <ul class="mt-6 space-y-2.5 text-[14px] text-gray-400">
               <li class="flex gap-2.5">
@@ -857,7 +856,7 @@
               Fireshare reads what you dropped in and groups it by game, pulling
               cover art automatically. Four hundred clips stop being a wall of
               <code class="text-gray-300 text-[13px]">2026-03-05_20-05-14</code>
-              and become shelves you can actually walk.
+              and turn into shelves you can actually browse.
             </p>
             <ul class="mt-6 space-y-2.5 text-[14px] text-gray-400">
               <li class="flex gap-2.5">
@@ -904,7 +903,7 @@
               Hand out accounts, not your admin password
             </h3>
             <p class="mt-4 text-gray-400 leading-relaxed">
-              New in v1.8.0: invite your squad with a link. Each account gets a
+              New in v1.8.0: invite your squad with a link. Each of them gets a
               profile page at
               <code class="text-gray-300 text-[13px]">/u/username</code> showing
               their own uploads, and you decide exactly what they're allowed to
@@ -986,7 +985,7 @@
             <p class="mt-4 text-gray-400 leading-relaxed">
               No opaque blob store, no external database to run. Point Fireshare
               at a directory and it scans what's there. The file manager gives
-              you bulk moves, privacy flips and transcode cleanup — and if you
+              you bulk moves, privacy changes and transcode cleanup — and if you
               ever walk away, your clips are exactly where you left them.
             </p>
             <ul class="mt-6 space-y-2.5 text-[14px] text-gray-400">
@@ -1664,9 +1663,10 @@
             </summary>
             <p class="pb-5 -mt-1 text-[14.5px] text-gray-400 leading-relaxed">
               MP4, M4V, MOV and WebM, encoded as H.264, H.265, AV1 or VP9 —
-              which covers what ShadowPlay, ReLive, OBS and your phone produce.
-              Because the original is served directly to the browser, it has to
-              be something browsers can play.
+              which covers what ShadowPlay, ReLive and your phone record by
+              default. Because the original is served straight to the browser,
+              it has to be something browsers can play, so MKV recordings need
+              remuxing to MP4 first.
             </p>
           </details>
 
@@ -1748,9 +1748,10 @@
               LDAP was removed in v1.8.0. Fireshare refuses to start while any
               <code class="text-gray-300">LDAP_*</code> variable is still set,
               before it touches your database — removing them is how you confirm
-              the upgrade, and each directory account is then converted to a
-              local one, keeping its uploads and permissions. If you still need
-              a directory server, pin to 1.7.9.
+              the upgrade. Each directory account is then converted to a local
+              one, keeping its uploads, profile and permissions, but with no
+              password: you set one or send an invite from Settings → Users.
+              If you still need a directory server, pin to 1.7.9.
               <a
                 href="/changelog"
                 class="text-fire-400 hover:text-fire-300 underline underline-offset-4 decoration-fire-400/30"
@@ -1779,9 +1780,9 @@
               </svg>
             </summary>
             <p class="pb-5 -mt-1 text-[14.5px] text-gray-400 leading-relaxed">
-              Yes — GPLv3, no paid tier, no telemetry, nothing gated. Sponsoring
-              is optional and pays for the public demo server and the weekends
-              that go into new releases.
+              Yes — GPLv3, no paid tier, nothing held back. Sponsoring is
+              optional and pays for the public demo server and the weekends that
+              go into new releases.
             </p>
           </details>
         </div>
@@ -1965,7 +1966,7 @@
       class="fixed bottom-4 inset-x-4 sm:inset-x-auto sm:right-6 z-40 flex items-center gap-3 rounded-2xl border hairline bg-dark-900/95 backdrop-blur-xl px-4 py-3 shadow-2xl"
     >
       <span class="hidden sm:block text-[13px] text-gray-400"
-        >Ready when you are —</span
+        >Ready when you are</span
       >
       <button
         class="copy inline-flex items-center gap-2 h-9 px-3.5 rounded-lg border hairline bg-white/[0.04] hover:bg-white/[0.09] text-[13px] font-medium text-gray-200 transition-colors"
