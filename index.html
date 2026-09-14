@@ -3,7 +3,14 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Fireshare - Self-Hosted Video Sharing</title>
+    <title>Fireshare — Self-hosted clip sharing. A link for every file.</title>
+    <script>
+      document.documentElement.classList.add("js");
+      document.documentElement.setAttribute(
+        "data-theme",
+        localStorage.getItem("fireshare-theme") || "blaze",
+      );
+    </script>
     <script
       defer
       src="https://umami.shaneisrael.net/script.js"
@@ -19,67 +26,64 @@
     ></script>
     <meta
       name="description"
-      content="Self-hosted video and image library with unique shareable links. Runs on your hardware with Docker."
+      content="Self-host your game clips, videos and images. Every file gets its own shareable link — originals served untouched, no upload caps, no re-encoding, no expiry."
     />
-    <meta property="og:title" content="Fireshare - Self-Hosted Video Sharing" />
+    <meta
+      property="og:title"
+      content="Fireshare — Self-hosted clip sharing. A link for every file."
+    />
     <meta
       property="og:description"
-      content="Self-hosted video and image library with unique shareable links. Runs on your hardware with Docker."
+      content="A folder on your server becomes a searchable clip library where every file gets its own link. No upload caps, no re-encoding, no expiry. One Docker container."
     />
     <meta property="og:type" content="website" />
-    <meta property="og:image" content="assets/images/logo_square.png" />
+    <meta property="og:image" content="https://fireshare.net/assets/images/og-cover.jpg" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
     <meta property="og:url" content="https://fireshare.net" />
+    <meta property="og:site_name" content="Fireshare" />
     <meta name="twitter:card" content="summary_large_image" />
     <meta
       name="twitter:title"
-      content="Fireshare - Self-Hosted Video Sharing"
+      content="Fireshare — Self-hosted clip sharing. A link for every file."
     />
     <meta
       name="twitter:description"
-      content="Self-hosted video and image library with unique shareable links. Runs on your hardware with Docker."
+      content="A folder on your server becomes a searchable clip library where every file gets its own link. No upload caps, no re-encoding, no expiry."
     />
     <meta
       name="twitter:image"
-      content="https://fireshare.net/assets/images/logo_square.png"
+      content="https://fireshare.net/assets/images/og-cover.jpg"
     />
+    <meta name="theme-color" content="#0b0b14" />
     <link rel="canonical" href="https://fireshare.net" />
     <link rel="icon" href="favicon.ico" />
     <link rel="apple-touch-icon" href="apple-touch-icon.png" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
-      href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap"
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500&display=swap"
       rel="stylesheet"
     />
-    <!-- Early theme init to prevent flash -->
-    <script>
-      document.documentElement.setAttribute(
-        "data-theme",
-        localStorage.getItem("fireshare-theme") || "blaze",
-      );
-    </script>
     <link rel="stylesheet" href="assets/tailwind.css" />
     <style>
-      /* ===== Theme Definitions ===== */
+      /* ===== Theme ===== */
       :root,
       [data-theme="blaze"] {
         --accent-400: 255 150 30;
         --accent-500: 224 50 148;
         --accent-600: 200 10 150;
       }
-
       [data-theme="ember"] {
         --accent-400: 251 147 60;
         --accent-500: 249 115 22;
         --accent-600: 234 88 12;
       }
-
       [data-theme="ocean"] {
         --accent-400: 96 165 250;
         --accent-500: 59 130 246;
         --accent-600: 37 99 235;
       }
-
       [data-theme="amethyst"] {
         --accent-400: 192 132 252;
         --accent-500: 168 85 247;
@@ -87,128 +91,139 @@
       }
 
       body {
-        font-family: "Inter", sans-serif;
+        font-family: "Inter", system-ui, sans-serif;
+      }
+      .font-mono,
+      code,
+      pre {
+        font-family: "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo,
+          monospace;
       }
 
-      .hero-gradient {
-        background:
+      /* ===== Reveal on scroll (JS-gated so the page works without JS) ===== */
+      .js .reveal {
+        opacity: 0;
+        transform: translateY(18px);
+        transition:
+          opacity 0.6s cubic-bezier(0.22, 1, 0.36, 1),
+          transform 0.6s cubic-bezier(0.22, 1, 0.36, 1);
+      }
+      .js .reveal.in {
+        opacity: 1;
+        transform: none;
+      }
+      @media (prefers-reduced-motion: reduce) {
+        .js .reveal {
+          opacity: 1;
+          transform: none;
+          transition: none;
+        }
+        html {
+          scroll-behavior: auto;
+        }
+      }
+
+      /* ===== Surfaces ===== */
+      .grid-bg {
+        background-image:
           radial-gradient(
-            ellipse at 20% 0%,
-            rgb(var(--accent-500) / 0.1) 0%,
-            transparent 60%
+            ellipse 80% 60% at 15% -10%,
+            rgb(var(--accent-500) / 0.16),
+            transparent 65%
           ),
           radial-gradient(
-            ellipse at 80% 20%,
-            rgb(var(--accent-400) / 0.06) 0%,
-            transparent 50%
+            ellipse 60% 50% at 85% 0%,
+            rgb(var(--accent-400) / 0.09),
+            transparent 60%
+          ),
+          linear-gradient(
+            to right,
+            rgba(255, 255, 255, 0.025) 1px,
+            transparent 1px
+          ),
+          linear-gradient(
+            to bottom,
+            rgba(255, 255, 255, 0.025) 1px,
+            transparent 1px
           );
+        background-size:
+          100% 100%,
+          100% 100%,
+          64px 64px,
+          64px 64px;
       }
-
-      .screenshot-glow {
+      .grid-fade {
+        -webkit-mask-image: linear-gradient(to bottom, #000 55%, transparent);
+        mask-image: linear-gradient(to bottom, #000 55%, transparent);
+      }
+      .hairline {
+        border-color: rgba(255, 255, 255, 0.07);
+      }
+      .glow {
         box-shadow:
-          0 0 60px -12px rgb(var(--accent-500) / 0.15),
-          0 25px 50px -12px rgba(0, 0, 0, 0.5);
+          0 0 90px -20px rgb(var(--accent-500) / 0.35),
+          0 40px 80px -30px rgba(0, 0, 0, 0.9);
       }
-
-      .gradient-border {
-        position: relative;
-      }
-
-      .gradient-border::before {
-        content: "";
-        position: absolute;
-        inset: -1px;
-        border-radius: inherit;
-        padding: 1px;
+      .accent-text {
         background: linear-gradient(
-          135deg,
-          rgb(var(--accent-500) / 0.4),
-          transparent 50%,
-          rgb(var(--accent-500) / 0.2)
+          100deg,
+          rgb(var(--accent-400)),
+          rgb(var(--accent-500)) 55%,
+          rgb(var(--accent-600))
         );
-        -webkit-mask:
-          linear-gradient(#fff 0 0) content-box,
-          linear-gradient(#fff 0 0);
-        mask:
-          linear-gradient(#fff 0 0) content-box,
-          linear-gradient(#fff 0 0);
-        -webkit-mask-composite: xor;
-        mask-composite: exclude;
-        pointer-events: none;
+        -webkit-background-clip: text;
+        background-clip: text;
+        color: transparent;
+      }
+      .rule::before {
+        content: "";
+        display: block;
+        width: 34px;
+        height: 2px;
+        margin-bottom: 1.15rem;
+        border-radius: 2px;
+        background: linear-gradient(
+          90deg,
+          rgb(var(--accent-400)),
+          rgb(var(--accent-600))
+        );
       }
 
-      .feature-card {
-        transition:
-          transform 0.25s ease,
-          box-shadow 0.25s ease;
+      /* ===== Terminal ===== */
+      .term {
+        background:
+          linear-gradient(180deg, rgba(255, 255, 255, 0.03), transparent 40%),
+          #07070f;
       }
 
-      .feature-card:hover {
-        transform: translateY(-4px);
-        box-shadow: 0 20px 40px -12px rgba(0, 0, 0, 0.4);
+      /* ===== Sticky bar ===== */
+      #dock {
+        transform: translateY(130%);
+        transition: transform 0.35s cubic-bezier(0.22, 1, 0.36, 1);
       }
-
-      .fade-up {
-        opacity: 0;
-        transform: translateY(30px);
-        transition:
-          opacity 0.7s ease,
-          transform 0.7s ease;
-      }
-
-      .fade-up.visible {
-        opacity: 1;
+      #dock.up {
         transform: translateY(0);
       }
 
-      .screenshots-track {
-        display: flex;
-        transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+      /* ===== FAQ ===== */
+      details > summary {
+        list-style: none;
+        cursor: pointer;
       }
-      .screenshots-track > div {
-        min-width: 100%;
-        box-sizing: border-box;
+      details > summary::-webkit-details-marker {
+        display: none;
       }
-
-      .code-block {
-        background: #0d0d1a;
-        border: 1px solid rgb(var(--accent-500) / 0.15);
+      details[open] summary .chev {
+        transform: rotate(180deg);
       }
 
-      .nav-blur {
-        backdrop-filter: blur(16px) saturate(180%);
-        -webkit-backdrop-filter: blur(16px) saturate(180%);
-      }
-
-      .theme-option.active {
-        background: rgba(255, 255, 255, 0.05);
+      /* ===== Tabs ===== */
+      .tab.on {
+        background: rgb(var(--accent-500) / 0.12);
         color: #fff;
+        border-color: rgb(var(--accent-500) / 0.35);
       }
 
-      .theme-swatch {
-        transition: box-shadow 0.2s ease;
-      }
-
-      .theme-option:hover .theme-swatch {
-        box-shadow: 0 0 8px currentColor;
-      }
-
-      /* Hero screenshot fades into the dark bg */
-      .hero-screenshot-wrap {
-        position: relative;
-      }
-      .hero-screenshot-wrap::after {
-        content: "";
-        position: absolute;
-        bottom: 0;
-        left: 0;
-        right: 0;
-        height: 45%;
-        background: linear-gradient(to top, #0b0b14, transparent);
-        pointer-events: none;
-      }
-
-      /* Buy Me a Coffee button */
       .bmc-btn {
         background-color: #ffdd00;
         color: #11111b;
@@ -216,1815 +231,1664 @@
           background-color 0.2s ease,
           box-shadow 0.2s ease;
       }
-
       .bmc-btn:hover {
         background-color: #ffe74d;
         box-shadow: 0 8px 24px -10px rgba(255, 221, 0, 0.6);
       }
+
+      .shot {
+        border-radius: 12px;
+        border: 1px solid rgba(255, 255, 255, 0.09);
+        overflow: hidden;
+        background: #0d0d18;
+      }
     </style>
+
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "SoftwareApplication",
+        "name": "Fireshare",
+        "applicationCategory": "MultimediaApplication",
+        "operatingSystem": "Docker (Linux, Windows, macOS, NAS)",
+        "description": "Self-hosted video and image library where every file gets a unique shareable link.",
+        "url": "https://fireshare.net",
+        "license": "https://www.gnu.org/licenses/gpl-3.0.html",
+        "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" }
+      }
+    </script>
   </head>
 
-  <body class="bg-dark-950 text-gray-200 antialiased overflow-x-hidden">
-    <!-- ===== NAVIGATION ===== -->
+  <body class="bg-dark-950 text-gray-300 antialiased overflow-x-hidden">
+    <a
+      href="#install"
+      class="sr-only focus:not-sr-only focus:fixed focus:top-3 focus:left-3 focus:z-[60] focus:px-4 focus:py-2 focus:rounded-lg focus:bg-white focus:text-black"
+      >Skip to install instructions</a
+    >
+
+    <!-- ============ NAV ============ -->
     <nav
-      class="fixed top-0 left-0 right-0 z-50 nav-blur bg-dark-950/80 border-b border-white/5"
+      class="fixed top-0 inset-x-0 z-50 border-b hairline bg-dark-950/85 backdrop-blur-xl"
     >
       <div
-        class="max-w-7xl mx-auto flex items-center justify-between px-6 py-4"
+        class="max-w-6xl mx-auto flex items-center justify-between gap-4 px-5 h-16"
       >
-        <a href="#" class="flex items-center gap-3 group">
+        <a href="#top" class="flex items-center gap-2.5 shrink-0">
           <picture>
             <source srcset="assets/images/logo.webp" type="image/webp" />
             <img
               src="assets/images/logo.png"
-              alt="Fireshare Logo"
-              class="h-9 w-auto"
+              alt=""
+              width="639"
+              height="899"
+              class="h-8 w-auto"
             />
           </picture>
-          <span
-            class="text-xl font-bold text-white group-hover:text-fire-400 transition-colors"
+          <span class="text-[17px] font-bold text-white tracking-tight"
             >Fireshare</span
           >
         </a>
-        <div class="hidden md:flex items-center gap-8 text-sm font-medium">
-          <a
-            href="#features"
-            data-nav="features"
-            class="nav-link text-gray-400 hover:text-white transition-colors"
+
+        <div
+          class="hidden md:flex items-center gap-7 text-[13.5px] font-medium text-gray-400"
+        >
+          <a href="#why" class="hover:text-white transition-colors">Why</a>
+          <a href="#tour" class="hover:text-white transition-colors">Tour</a>
+          <a href="#demo" class="hover:text-white transition-colors">Demo</a>
+          <a href="#features" class="hover:text-white transition-colors"
             >Features</a
           >
-          <a
-            href="#demo"
-            data-nav="demo"
-            class="nav-link text-gray-400 hover:text-white transition-colors"
-            >Demo</a
-          >
-          <a
-            href="#screenshots"
-            data-nav="screenshots"
-            class="nav-link text-gray-400 hover:text-white transition-colors"
-            >Screenshots</a
-          >
-          <a
-            href="#install"
-            data-nav="install"
-            class="nav-link text-gray-400 hover:text-white transition-colors"
-            >Install</a
-          >
-          <a
-            href="/changelog"
-            class="nav-link text-gray-400 hover:text-white transition-colors"
+          <a href="#faq" class="hover:text-white transition-colors">FAQ</a>
+          <a href="/changelog" class="hover:text-white transition-colors"
             >Changelog</a
           >
-          <a
-            href="https://github.com/sponsors/ShaneIsrael"
-            target="_blank"
-            rel="noopener noreferrer"
-            class="text-fire-400 hover:text-white transition-colors flex items-center gap-1.5"
-          >
-            <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
-              <path
-                d="M12 21.593c-.169-.197-3.77-3.374-5.812-5.55C4.503 14.226 3 12.348 3 10a5 5 0 0 1 9-3 5 5 0 0 1 9 3c0 2.348-1.503 4.226-3.188 6.043C15.77 18.219 12.169 21.396 12 21.593z"
-              />
-            </svg>
-            Sponsor
-          </a>
         </div>
-        <div class="flex items-center gap-3">
-          <a
-            href="https://www.buymeacoffee.com/shaneisrael"
-            target="_blank"
-            rel="noopener noreferrer"
-            title="Buy me a coffee"
-            class="bmc-btn hidden lg:inline-flex items-center gap-2 px-3 py-1.5 rounded-lg text-sm font-semibold"
-          >
-            <svg
-              class="w-4 h-4"
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
-            >
-              <path
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                stroke-width="2"
-                d="M18 8h1a4 4 0 010 8h-1M2 8h16v9a4 4 0 01-4 4H6a4 4 0 01-4-4V8zm4-4h8"
-              />
-            </svg>
-            Buy me a coffee
-          </a>
-          <!-- Theme picker — uncomment to enable
-          <div class="relative" id="theme-toggle-wrapper">
-            <button
-              id="theme-toggle-btn"
-              class="p-2 rounded-lg bg-white/5 hover:bg-white/10 border border-white/10 transition-all text-fire-500"
-              aria-label="Change theme"
-              title="Change theme"
-            >
-              <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" d="M7 21a4 4 0 01-4-4V5a2 2 0 012-2h4a2 2 0 012 2v12a4 4 0 01-4 4zm0 0h12a2 2 0 002-2v-4a2 2 0 00-2-2h-2.343M11 7.343l1.657-1.657a2 2 0 012.828 0l2.829 2.829a2 2 0 010 2.828l-8.486 8.485M7 17h.01" />
-              </svg>
-            </button>
-            <div id="theme-dropdown" class="hidden absolute right-0 mt-2 w-36 rounded-xl bg-dark-800 border border-white/10 shadow-2xl overflow-hidden z-50">
-              <button data-theme="blaze" class="theme-option w-full flex items-center gap-3 px-4 py-2.5 text-sm text-gray-400 hover:bg-white/5 transition-colors">
-                <span class="theme-swatch w-3 h-3 rounded-full shrink-0" style="background-color: rgb(224, 50, 148)"></span>Blaze
-              </button>
-              <button data-theme="ember" class="theme-option w-full flex items-center gap-3 px-4 py-2.5 text-sm text-gray-400 hover:bg-white/5 transition-colors">
-                <span class="theme-swatch w-3 h-3 rounded-full bg-orange-500 shrink-0"></span>Ember
-              </button>
-              <button data-theme="ocean" class="theme-option w-full flex items-center gap-3 px-4 py-2.5 text-sm text-gray-400 hover:bg-white/5 transition-colors">
-                <span class="theme-swatch w-3 h-3 rounded-full bg-blue-500 shrink-0"></span>Ocean
-              </button>
-              <button data-theme="amethyst" class="theme-option w-full flex items-center gap-3 px-4 py-2.5 text-sm text-gray-400 hover:bg-white/5 transition-colors">
-                <span class="theme-swatch w-3 h-3 rounded-full bg-purple-500 shrink-0"></span>Amethyst
-              </button>
-            </div>
-          </div>
-          -->
+
+        <div class="flex items-center gap-2">
           <a
             href="https://github.com/ShaneIsrael/fireshare"
             target="_blank"
             rel="noopener noreferrer"
-            class="hidden md:flex items-center gap-2 px-3 py-1.5 rounded-lg bg-white/5 hover:bg-white/10 border border-white/10 text-sm text-gray-300 hover:text-white transition-all font-medium"
+            class="hidden sm:inline-flex items-center gap-2 h-9 px-3 rounded-lg border hairline bg-white/[0.03] hover:bg-white/[0.07] text-[13px] text-gray-300 hover:text-white transition-colors"
           >
             <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
               <path
                 d="M12 0C5.374 0 0 5.373 0 12c0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23A11.509 11.509 0 0112 5.803c1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576C20.566 21.797 24 17.3 24 12c0-6.627-5.373-12-12-12z"
               />
             </svg>
-            GitHub
+            <span class="font-mono" data-stat="stars">1.5k</span>
+          </a>
+          <a
+            href="#install"
+            class="inline-flex items-center gap-1.5 h-9 px-4 rounded-lg bg-white text-black text-[13px] font-semibold hover:bg-gray-200 transition-colors"
+          >
+            Install
           </a>
           <button
-            id="mobile-menu-btn"
-            class="md:hidden p-2 rounded-lg hover:bg-white/10 transition-colors"
-            aria-label="Toggle menu"
+            id="menu-btn"
+            class="md:hidden p-2 -mr-1 rounded-lg hover:bg-white/10 text-gray-300"
+            aria-label="Menu"
+            aria-expanded="false"
           >
             <svg
               class="w-5 h-5"
               fill="none"
               stroke="currentColor"
+              stroke-width="2"
               viewBox="0 0 24 24"
             >
               <path
                 stroke-linecap="round"
                 stroke-linejoin="round"
-                stroke-width="2"
-                d="M4 6h16M4 12h16M4 18h16"
+                d="M4 7h16M4 12h16M4 17h16"
               />
             </svg>
           </button>
         </div>
       </div>
-      <!-- Mobile menu -->
       <div
-        id="mobile-menu"
-        class="hidden md:hidden border-t border-white/5 px-6 py-4 space-y-3"
+        id="menu"
+        class="hidden md:hidden border-t hairline px-5 py-4 grid grid-cols-2 gap-x-6 gap-y-3 text-sm text-gray-400"
       >
-        <a
-          href="#features"
-          class="block text-gray-400 hover:text-white transition-colors text-sm font-medium"
-          >Features</a
-        >
-        <a
-          href="#demo"
-          class="block text-gray-400 hover:text-white transition-colors text-sm font-medium"
-          >Demo</a
-        >
-        <a
-          href="#screenshots"
-          class="block text-gray-400 hover:text-white transition-colors text-sm font-medium"
-          >Screenshots</a
-        >
-        <a
-          href="#install"
-          class="block text-gray-400 hover:text-white transition-colors text-sm font-medium"
-          >Install</a
-        >
-        <a
-          href="/changelog"
-          class="block text-gray-400 hover:text-white transition-colors text-sm font-medium"
-          >Changelog</a
-        >
+        <a href="#why" class="hover:text-white">Why Fireshare</a>
+        <a href="#tour" class="hover:text-white">Tour</a>
+        <a href="#demo" class="hover:text-white">Live demo</a>
+        <a href="#features" class="hover:text-white">Features</a>
+        <a href="#install" class="hover:text-white">Install</a>
+        <a href="#faq" class="hover:text-white">FAQ</a>
+        <a href="/changelog" class="hover:text-white">Changelog</a>
         <a
           href="https://github.com/ShaneIsrael/fireshare"
           target="_blank"
           rel="noopener noreferrer"
-          class="block text-gray-400 hover:text-white transition-colors text-sm font-medium"
+          class="hover:text-white"
           >GitHub</a
         >
-        <a
-          href="https://github.com/sponsors/ShaneIsrael"
-          target="_blank"
-          rel="noopener noreferrer"
-          class="flex items-center gap-1.5 text-fire-400 hover:text-white transition-colors text-sm font-medium"
-        >
-          <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
-            <path
-              d="M12 21.593c-.169-.197-3.77-3.374-5.812-5.55C4.503 14.226 3 12.348 3 10a5 5 0 0 1 9-3 5 5 0 0 1 9 3c0 2.348-1.503 4.226-3.188 6.043C15.77 18.219 12.169 21.396 12 21.593z"
-            />
-          </svg>
-          Sponsor
-        </a>
-        <a
-          href="https://www.buymeacoffee.com/shaneisrael"
-          target="_blank"
-          rel="noopener noreferrer"
-          title="Buy me a coffee"
-          class="bmc-btn inline-flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-semibold"
-        >
-          <svg
-            class="w-4 h-4"
-            fill="none"
-            stroke="currentColor"
-            viewBox="0 0 24 24"
-          >
-            <path
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              stroke-width="2"
-              d="M18 8h1a4 4 0 010 8h-1M2 8h16v9a4 4 0 01-4 4H6a4 4 0 01-4-4V8zm4-4h8"
-            />
-          </svg>
-          Buy me a coffee
-        </a>
       </div>
     </nav>
 
-    <!-- ===== HERO ===== -->
-    <section class="hero-gradient relative pt-20 overflow-hidden">
-      <div class="max-w-3xl mx-auto px-6 pt-10 pb-16 text-center fade-up">
-        <h1
-          class="text-5xl sm:text-6xl lg:text-7xl font-black text-white leading-[1.05] tracking-tight"
-        >
-          Your server.<br />
-          Your media.<br />
-          <span
-            class="bg-gradient-to-r from-fire-400 to-fire-600 bg-clip-text text-transparent"
-            >Your rules.</span
-          >
-        </h1>
-        <p
-          class="mt-8 text-lg sm:text-xl text-gray-400 leading-relaxed max-w-2xl mx-auto"
-        >
-          Fireshare is a self-hosted video and image library. Every file gets
-          its own shareable URL. No cloud uploads, no storage limits, no
-          platform deciding what stays up.
-        </p>
-        <div class="mt-10 flex flex-wrap justify-center gap-3">
-          <a
-            href="https://demo.fireshare.net"
-            target="_blank"
-            rel="noopener noreferrer"
-            class="inline-flex items-center gap-2 px-6 py-3 rounded-xl bg-gradient-to-r from-fire-500 to-fire-600 hover:from-fire-400 hover:to-fire-500 text-white font-semibold shadow-lg shadow-fire-500/25 transition-all text-sm"
-          >
-            <svg
-              class="w-4 h-4"
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
+    <!-- ============ HERO ============ -->
+    <header id="top" class="relative pt-16">
+      <div class="absolute inset-0 grid-bg grid-fade pointer-events-none"></div>
+
+      <div class="relative max-w-6xl mx-auto px-5 pt-16 pb-12 lg:pt-24">
+        <div class="grid lg:grid-cols-12 gap-12 lg:gap-10 items-center">
+          <!-- Copy -->
+          <div class="lg:col-span-7 min-w-0">
+            <div
+              class="inline-flex flex-wrap items-center gap-x-2 gap-y-1 max-w-full rounded-full border hairline bg-white/[0.03] pl-1.5 pr-3 py-1 text-[12.5px] text-gray-400 mb-7"
             >
-              <path
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                stroke-width="2"
-                d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z"
-              />
-              <path
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                stroke-width="2"
-                d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
-              />
-            </svg>
-            Try the demo
-          </a>
-          <a
-            href="#install"
-            class="inline-flex items-center gap-2 px-6 py-3 rounded-xl bg-white/5 hover:bg-white/10 border border-white/10 text-white font-semibold transition-all text-sm"
-          >
-            <svg
-              class="w-4 h-4"
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
+              <span
+                class="px-2 py-0.5 rounded-full bg-fire-500/15 text-fire-400 font-semibold font-mono text-[11.5px]"
+                data-stat="version"
+                >v1.8.0</span
+              >
+              Multi-user accounts, permissions &amp; profiles
+              <span class="hidden sm:inline text-gray-600">·</span>
+              <a
+                href="/changelog"
+                class="hidden sm:inline text-gray-300 hover:text-white"
+                >changelog</a
+              >
+            </div>
+
+            <h1
+              class="text-[2.6rem] leading-[1.03] sm:text-6xl lg:text-[4.1rem] font-black text-white tracking-[-0.035em]"
             >
-              <path
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                stroke-width="2"
-                d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"
-              />
-            </svg>
-            Get started
-          </a>
-          <a
-            href="https://github.com/ShaneIsrael/fireshare"
-            target="_blank"
-            rel="noopener noreferrer"
-            class="inline-flex items-center gap-2 px-6 py-3 rounded-xl bg-white/5 hover:bg-white/10 border border-white/10 text-white font-semibold transition-all text-sm"
-          >
-            <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
-              <path
-                d="M12 0C5.374 0 0 5.373 0 12c0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23A11.509 11.509 0 0112 5.803c1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576C20.566 21.797 24 17.3 24 12c0-6.627-5.373-12-12-12z"
-              />
-            </svg>
-            GitHub
-          </a>
-        </div>
-        <!-- Stats -->
-        <div class="mt-8 flex flex-wrap justify-center items-center gap-3">
-          <a
-            href="https://github.com/ShaneIsrael/fireshare/releases"
-            target="_blank"
-            rel="noopener noreferrer"
-            class="inline-flex items-center gap-2 px-3 py-1.5 rounded-lg bg-white/5 border border-white/10 text-sm hover:bg-white/10 transition-colors"
-          >
-            <svg
-              class="w-4 h-4 text-fire-400"
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
+              A link for every clip.<br />
+              <span class="accent-text">Hosted on your box.</span>
+            </h1>
+
+            <p class="mt-7 text-lg text-gray-400 leading-relaxed max-w-xl">
+              Fireshare turns a folder on your server into a searchable video
+              and image library. Every file gets its own URL you can drop in
+              Discord — and the file people watch is
+              <strong class="text-gray-200 font-semibold"
+                >your original, untouched</strong
+              >. No upload caps. No re-encoding. No expiry date.
+            </p>
+
+            <div class="mt-9 flex flex-wrap items-center gap-3">
+              <a
+                href="#install"
+                class="inline-flex items-center gap-2 px-6 h-12 rounded-xl bg-gradient-to-r from-fire-400 to-fire-600 text-white font-semibold shadow-lg shadow-fire-500/25 hover:brightness-110 transition-all"
+              >
+                Get it running
+                <svg
+                  class="w-4 h-4"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2.2"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    d="M9 5l7 7-7 7"
+                  />
+                </svg>
+              </a>
+              <a
+                href="https://demo.fireshare.net"
+                target="_blank"
+                rel="noopener noreferrer"
+                class="inline-flex items-center gap-2 px-6 h-12 rounded-xl border hairline bg-white/[0.03] hover:bg-white/[0.07] text-white font-semibold transition-colors"
+              >
+                <svg
+                  class="w-4 h-4 text-fire-400"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z"
+                  />
+                  <circle cx="12" cy="12" r="9" />
+                </svg>
+                Try the live demo
+              </a>
+            </div>
+
+            <!-- Trust row -->
+            <dl
+              class="mt-9 flex flex-wrap items-center gap-x-7 gap-y-3 text-[13px]"
             >
-              <path
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                stroke-width="2"
-                d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z"
-              />
-            </svg>
-            <span class="text-gray-400">Version</span>
-            <span id="stat-version" class="text-white font-semibold">—</span>
-          </a>
-          <a
-            href="https://hub.docker.com/r/shaneisrael/fireshare"
-            target="_blank"
-            rel="noopener noreferrer"
-            class="inline-flex items-center gap-2 px-3 py-1.5 rounded-lg bg-white/5 border border-white/10 text-sm hover:bg-white/10 transition-colors"
-          >
-            <svg
-              class="w-4 h-4 text-fire-400"
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
+              <div class="flex items-baseline gap-1.5">
+                <dd
+                  class="font-mono text-white font-semibold"
+                  data-stat="pulls"
+                >
+                  730k
+                </dd>
+                <dt class="text-gray-500">Docker pulls</dt>
+              </div>
+              <div class="flex items-baseline gap-1.5">
+                <dd class="font-mono text-white font-semibold" data-stat="stars">
+                  1.5k
+                </dd>
+                <dt class="text-gray-500">GitHub stars</dt>
+              </div>
+              <div class="flex items-baseline gap-1.5">
+                <dd class="font-mono text-white font-semibold">GPLv3</dd>
+                <dt class="text-gray-500">no paid tier</dt>
+              </div>
+            </dl>
+          </div>
+
+          <!-- Terminal -->
+          <div class="lg:col-span-5 min-w-0">
+            <div
+              class="rounded-2xl term border hairline overflow-hidden shadow-2xl"
             >
-              <path
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                stroke-width="2"
-                d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"
-              />
-            </svg>
-            <span class="text-gray-400">Docker pulls</span>
-            <span id="stat-pulls" class="text-white font-semibold">—</span>
-          </a>
-          <a
-            href="https://github.com/ShaneIsrael/fireshare"
-            target="_blank"
-            rel="noopener noreferrer"
-            class="inline-flex items-center gap-2 px-3 py-1.5 rounded-lg bg-white/5 border border-white/10 text-sm hover:bg-white/10 transition-colors"
-          >
-            <svg
-              class="w-4 h-4 text-fire-400"
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
-            >
-              <path
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                stroke-width="2"
-                d="M11.049 2.927c.3-.921 1.603-.921 1.902 0l1.519 4.674a1 1 0 00.95.69h4.915c.969 0 1.371 1.24.588 1.81l-3.976 2.888a1 1 0 00-.363 1.118l1.518 4.674c.3.922-.755 1.688-1.538 1.118l-3.976-2.888a1 1 0 00-1.176 0l-3.976 2.888c-.783.57-1.838-.197-1.538-1.118l1.518-4.674a1 1 0 00-.363-1.118l-3.976-2.888c-.784-.57-.38-1.81.588-1.81h4.914a1 1 0 00.951-.69l1.519-4.674z"
-              />
-            </svg>
-            <span class="text-gray-400">GitHub stars</span>
-            <span id="stat-stars" class="text-white font-semibold">—</span>
-          </a>
+              <div
+                class="flex items-center justify-between px-4 h-11 border-b hairline"
+              >
+                <div class="flex items-center gap-2">
+                  <span
+                    class="w-2.5 h-2.5 rounded-full bg-white/10"
+                    aria-hidden="true"
+                  ></span>
+                  <span
+                    class="w-2.5 h-2.5 rounded-full bg-white/10"
+                    aria-hidden="true"
+                  ></span>
+                  <span
+                    class="w-2.5 h-2.5 rounded-full bg-white/10"
+                    aria-hidden="true"
+                  ></span>
+                  <span class="ml-2 text-[11.5px] text-gray-500 font-mono"
+                    >~/homelab</span
+                  >
+                </div>
+                <button
+                  class="copy inline-flex items-center gap-1.5 text-[11.5px] font-medium text-gray-400 hover:text-white px-2 py-1 rounded-md hover:bg-white/5 transition-colors"
+                  data-copy="#cmd-hero"
+                >
+                  <svg
+                    class="w-3.5 h-3.5 i-copy"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"
+                    />
+                  </svg>
+                  <span class="label">Copy</span>
+                </button>
+              </div>
+              <pre
+                id="cmd-hero"
+                class="p-5 text-[12.5px] leading-[1.75] overflow-x-auto"
+              ><code><span class="text-gray-600">$</span> <span class="text-white">docker run</span> <span class="text-fire-400">-d</span> <span class="text-fire-400">--name</span> fireshare <span class="text-fire-400">-p</span> <span class="text-emerald-400">8080:80</span> \
+    <span class="text-fire-400">-v</span> <span class="text-emerald-400">./data:/data</span> \
+    <span class="text-fire-400">-v</span> <span class="text-emerald-400">./processed:/processed</span> \
+    <span class="text-fire-400">-v</span> <span class="text-emerald-400">./videos:/videos</span> \
+    <span class="text-fire-400">-v</span> <span class="text-emerald-400">./images:/images</span> \
+    <span class="text-fire-400">-e</span> <span class="text-emerald-400">ADMIN_USERNAME=admin</span> \
+    <span class="text-fire-400">-e</span> <span class="text-emerald-400">ADMIN_PASSWORD=changeme</span> \
+    shaneisrael/fireshare:latest-lite</code></pre>
+              <div
+                class="px-5 py-3 border-t hairline text-[12px] text-gray-500 flex flex-wrap items-center gap-x-2 gap-y-1"
+              >
+                <svg
+                  class="w-3.5 h-3.5 text-emerald-400 shrink-0"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2.5"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    d="M5 13l4 4L19 7"
+                  />
+                </svg>
+                Then open
+                <code class="text-gray-300">http://localhost:8080</code>
+                and drop in a clip.
+              </div>
+            </div>
+          </div>
         </div>
       </div>
-      <!-- Hero screenshot emerging from the page -->
-      <div class="hero-screenshot-wrap max-w-6xl mx-auto px-4 sm:px-6 fade-up">
-        <div
-          class="rounded-t-2xl overflow-hidden border border-white/10 border-b-0"
-          style="
-            box-shadow:
-              0 0 80px -10px rgb(var(--accent-500) / 0.2),
-              0 40px 80px -20px rgba(0, 0, 0, 0.6);
-          "
-        >
+
+      <!-- Product shot -->
+      <div class="relative max-w-6xl mx-auto px-5 pb-20">
+        <div class="shot glow reveal">
           <picture>
             <source srcset="assets/images/cards.webp" type="image/webp" />
             <img
               src="assets/images/cards.png"
-              alt="Fireshare Dashboard"
+              alt="The Fireshare dashboard: a grid of game clips with titles, durations, view counts and game tags"
+              width="2560"
+              height="1368"
               class="w-full block"
             />
           </picture>
         </div>
       </div>
+    </header>
+
+    <!-- ============ PLATFORM BAND ============ -->
+    <section class="border-y hairline bg-white/[0.015]">
+      <div
+        class="max-w-6xl mx-auto px-5 py-7 flex flex-col sm:flex-row items-center gap-6 sm:gap-10"
+      >
+        <p
+          class="text-[12px] uppercase tracking-[0.18em] text-gray-500 font-semibold shrink-0"
+        >
+          Runs anywhere Docker does
+        </p>
+        <div
+          class="flex flex-wrap items-center justify-center gap-x-9 gap-y-4 opacity-70"
+        >
+          <img
+            src="https://cdn.simpleicons.org/docker/9aa0b3"
+            alt="Docker"
+            width="26"
+            height="26"
+            class="h-[26px] w-auto"
+            loading="lazy"
+          />
+          <img
+            src="https://cdn.simpleicons.org/unraid/9aa0b3"
+            alt="Unraid"
+            width="26"
+            height="26"
+            class="h-[26px] w-auto"
+            loading="lazy"
+          />
+          <img
+            src="https://cdn.simpleicons.org/synology/9aa0b3"
+            alt="Synology"
+            width="26"
+            height="26"
+            class="h-[26px] w-auto"
+            loading="lazy"
+          />
+          <img
+            src="https://cdn.simpleicons.org/proxmox/9aa0b3"
+            alt="Proxmox"
+            width="26"
+            height="26"
+            class="h-[26px] w-auto"
+            loading="lazy"
+          />
+          <img
+            src="https://cdn.simpleicons.org/truenas/9aa0b3"
+            alt="TrueNAS"
+            width="26"
+            height="26"
+            class="h-[26px] w-auto"
+            loading="lazy"
+          />
+          <img
+            src="https://cdn.simpleicons.org/raspberrypi/9aa0b3"
+            alt="Raspberry Pi"
+            width="26"
+            height="26"
+            class="h-[26px] w-auto"
+            loading="lazy"
+          />
+          <img
+            src="https://cdn.simpleicons.org/linux/9aa0b3"
+            alt="Linux"
+            width="26"
+            height="26"
+            class="h-[26px] w-auto"
+            loading="lazy"
+          />
+        </div>
+      </div>
     </section>
 
-    <!-- ===== THREE PILLARS ===== -->
-    <section class="relative py-24 border-b border-white/5">
-      <div class="max-w-5xl mx-auto px-6">
-        <div class="grid sm:grid-cols-3 gap-10 sm:gap-0 fade-up">
-          <div class="sm:pr-10">
-            <div
-              class="text-3xl font-black text-fire-500/25 mb-4 font-mono tracking-tight"
-            >
-              01
+    <!-- ============ WHY / COMPARISON ============ -->
+    <section id="why" class="relative py-20 md:py-28">
+      <div class="max-w-6xl mx-auto px-5">
+        <div class="max-w-2xl reveal">
+          <h2
+            class="rule text-3xl sm:text-[2.6rem] font-extrabold text-white tracking-[-0.03em] leading-[1.1]"
+          >
+            You already recorded it.<br />Why does someone else get to hold it?
+          </h2>
+          <p class="mt-5 text-gray-400 text-lg leading-relaxed">
+            Every clip host solves the same problem the same way: take your
+            file, shrink it, put it behind their brand, and charge you when you
+            outgrow the free tier. Fireshare skips all of that — the file stays
+            on your disk and the link points at your server.
+          </p>
+        </div>
+
+        <div class="mt-14 grid md:grid-cols-2 gap-5">
+          <!-- Them -->
+          <div
+            class="reveal rounded-2xl border hairline bg-white/[0.015] p-7 md:p-8"
+          >
+            <div class="flex items-center gap-2.5 mb-6">
+              <span
+                class="w-8 h-8 rounded-lg bg-white/5 grid place-items-center text-gray-500"
+              >
+                <svg
+                  class="w-4 h-4"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    d="M3 15a4 4 0 004 4h9a5 5 0 10-.1-9.999 5.002 5.002 0 10-9.78 2.096A4.001 4.001 0 003 15z"
+                  />
+                </svg>
+              </span>
+              <h3 class="text-gray-300 font-semibold">
+                A clip site or a chat upload
+              </h3>
             </div>
-            <h3 class="text-white font-semibold text-lg mb-3">
-              Runs on your hardware
-            </h3>
-            <p class="text-gray-400 text-sm leading-relaxed">
-              Your files never leave your server. No CDN fees, no storage
-              quotas, no service deciding your content violates their terms.
-            </p>
+            <ul class="space-y-3.5 text-[14.5px] text-gray-500">
+              <li class="flex gap-3">
+                <span class="text-gray-600 mt-0.5 shrink-0">✕</span>Your file
+                lives on someone else's disk, under their terms of service
+              </li>
+              <li class="flex gap-3">
+                <span class="text-gray-600 mt-0.5 shrink-0">✕</span>Re-encoded
+                on upload — the 1440p clip your viewers get is not the one you
+                recorded
+              </li>
+              <li class="flex gap-3">
+                <span class="text-gray-600 mt-0.5 shrink-0">✕</span>Upload caps
+                and storage tiers decide what you're allowed to share
+              </li>
+              <li class="flex gap-3">
+                <span class="text-gray-600 mt-0.5 shrink-0">✕</span>Links rot:
+                accounts lapse, free tiers expire, clips get pruned
+              </li>
+              <li class="flex gap-3">
+                <span class="text-gray-600 mt-0.5 shrink-0">✕</span>Ads,
+                watermarks and sign-up walls between your friend and your clip
+              </li>
+              <li class="flex gap-3">
+                <span class="text-gray-600 mt-0.5 shrink-0">✕</span>Monthly
+                subscription, forever, for a folder of videos
+              </li>
+            </ul>
           </div>
-          <div class="sm:px-10 sm:border-l sm:border-white/5">
-            <div
-              class="text-3xl font-black text-fire-500/25 mb-4 font-mono tracking-tight"
-            >
-              02
+
+          <!-- Us -->
+          <div
+            class="reveal rounded-2xl border border-fire-500/25 bg-gradient-to-b from-fire-500/[0.07] to-transparent p-7 md:p-8"
+          >
+            <div class="flex items-center gap-2.5 mb-6">
+              <span
+                class="w-8 h-8 rounded-lg bg-fire-500/15 grid place-items-center"
+              >
+                <picture>
+                  <source srcset="assets/images/logo.webp" type="image/webp" />
+                  <img
+                    src="assets/images/logo.png"
+                    alt=""
+                    width="639"
+                    height="899"
+                    class="h-4 w-auto"
+                  />
+                </picture>
+              </span>
+              <h3 class="text-white font-semibold">Fireshare</h3>
             </div>
-            <h3 class="text-white font-semibold text-lg mb-3">
-              A link for every file
-            </h3>
-            <p class="text-gray-400 text-sm leading-relaxed">
-              Every video and image gets a unique URL. Set it public, private,
-              or password-protected. Embeds work on Discord, Twitter, and most
-              chat apps.
-            </p>
-          </div>
-          <div class="sm:pl-10 sm:border-l sm:border-white/5">
-            <div
-              class="text-3xl font-black text-fire-500/25 mb-4 font-mono tracking-tight"
-            >
-              03
-            </div>
-            <h3 class="text-white font-semibold text-lg mb-3">
-              Set up in minutes
-            </h3>
-            <p class="text-gray-400 text-sm leading-relaxed">
-              One Docker container. Mount a folder, set two env vars, open a
-              browser. No database to configure, no external services needed.
-            </p>
+            <ul class="space-y-3.5 text-[14.5px] text-gray-300">
+              <li class="flex gap-3">
+                <span class="text-fire-400 mt-0.5 shrink-0">✓</span>Your file
+                never moves — it sits in the folder you mounted
+              </li>
+              <li class="flex gap-3">
+                <span class="text-fire-400 mt-0.5 shrink-0">✓</span>
+                <span
+                  >The original is served untouched; transcodes are
+                  <em class="not-italic text-white">extra</em> qualities, never
+                  replacements</span
+                >
+              </li>
+              <li class="flex gap-3">
+                <span class="text-fire-400 mt-0.5 shrink-0">✓</span>A 2.4&nbsp;GB
+                clip is as shareable as a 12&nbsp;MB one. Your disk is the limit
+              </li>
+              <li class="flex gap-3">
+                <span class="text-fire-400 mt-0.5 shrink-0">✓</span>Links last
+                exactly as long as you keep the file
+              </li>
+              <li class="flex gap-3">
+                <span class="text-fire-400 mt-0.5 shrink-0">✓</span>No account
+                needed to watch. Public, link-only, or password-protected —
+                per&nbsp;file
+              </li>
+              <li class="flex gap-3">
+                <span class="text-fire-400 mt-0.5 shrink-0">✓</span>Free and
+                GPLv3. You already pay for the hardware
+              </li>
+            </ul>
           </div>
         </div>
       </div>
     </section>
 
-    <!-- ===== LIVE DEMO ===== -->
-    <section id="demo" class="relative py-24 md:py-32 overflow-hidden">
-      <div
-        class="absolute inset-0 bg-gradient-to-b from-dark-950 via-dark-900/50 to-dark-950"
-      ></div>
-      <div class="relative max-w-5xl mx-auto px-6">
-        <div class="text-center fade-up mb-12">
-          <span
-            class="inline-block px-3 py-1 rounded-full text-xs font-semibold tracking-wide uppercase bg-fire-500/10 text-fire-400 mb-4"
-            >Live from the demo server</span
-          >
-          <h2 class="text-3xl sm:text-4xl font-extrabold text-white">
-            Watch it live
-          </h2>
-          <p class="mt-4 text-gray-400 text-lg max-w-2xl mx-auto">
-            This video is streaming directly from a real Fireshare instance —
-            not re-hosted on YouTube or a CDN. That's kind of the whole point.
-          </p>
-        </div>
+    <!-- ============ TOUR ============ -->
+    <section id="tour" class="relative py-20 md:py-24 border-t hairline">
+      <div class="max-w-6xl mx-auto px-5">
+        <h2
+          class="rule reveal text-3xl sm:text-[2.6rem] font-extrabold text-white tracking-[-0.03em] max-w-2xl leading-[1.1]"
+        >
+          Built for a folder that keeps growing
+        </h2>
 
-        <div class="fade-up">
-          <div
-            class="rounded-xl overflow-hidden border border-white/10 bg-dark-800/80 shadow-2xl"
-          >
-            <!-- Title bar -->
-            <div
-              class="flex items-center gap-3 px-4 py-3 bg-dark-900/80 border-b border-white/5"
+        <!-- 1 -->
+        <div class="mt-16 md:mt-20 grid lg:grid-cols-12 gap-10 items-center">
+          <div class="lg:col-span-5 reveal">
+            <span
+              class="font-mono text-[12px] text-fire-400/80 tracking-widest"
+              >01 / SHARE</span
             >
-              <div class="hidden sm:flex gap-1.5">
-                <div class="w-3 h-3 rounded-full bg-red-500/80"></div>
-                <div class="w-3 h-3 rounded-full bg-yellow-500/80"></div>
-                <div class="w-3 h-3 rounded-full bg-green-500/80"></div>
-              </div>
-              <div class="flex-1 flex justify-center min-w-0">
-                <div
-                  class="flex items-center gap-2 bg-dark-800/60 rounded-md px-3 py-1 text-xs text-gray-500 w-full justify-center min-w-0"
-                >
-                  <svg
-                    class="w-3 h-3 text-green-500 shrink-0"
-                    fill="none"
-                    stroke="currentColor"
-                    viewBox="0 0 24 24"
-                  >
-                    <path
-                      stroke-linecap="round"
-                      stroke-linejoin="round"
-                      stroke-width="2"
-                      d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"
-                    />
-                  </svg>
-                  <span class="truncate"
-                    >v.fireshare.net/w/c35114e0f7a3675b47a987027fa523bd</span
-                  >
-                </div>
-              </div>
-              <div class="hidden sm:block w-[54px]"></div>
-            </div>
-            <!-- Video player -->
-            <div class="bg-black">
-              <video
-                id="demo-video"
-                class="aspect-video"
-                controls
-                preload="metadata"
-                poster="https://v.fireshare.net/_content/derived/c35114e0f7a3675b47a987027fa523bd/poster.jpg"
-              >
-                <source src="" type="video/mp4" />
-                Your browser does not support the video element.
-              </video>
-            </div>
-            <!-- Video info bar -->
-            <div
-              class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 sm:gap-3 px-4 py-3 bg-dark-900/80 border-t border-white/5"
+            <h3
+              class="mt-3 text-2xl sm:text-3xl font-bold text-white tracking-[-0.02em]"
             >
-              <div class="flex items-center gap-3 min-w-0">
-                <picture class="shrink-0">
-                  <source srcset="assets/images/logo.webp" type="image/webp" />
-                  <img
-                    src="assets/images/logo.png"
-                    alt="Fireshare"
-                    class="h-5"
-                  />
-                </picture>
-                <span class="text-sm text-white font-medium truncate"
-                  >Dude had 4 surveyor vaults!</span
-                >
-              </div>
-              <div
-                class="flex items-center gap-3 justify-between sm:justify-end"
-              >
-                <div class="relative" id="quality-wrapper">
-                  <button
-                    id="quality-btn"
-                    class="flex items-center gap-1.5 px-2.5 py-1 rounded-md bg-dark-800/60 border border-white/10 text-xs text-gray-400 hover:text-white hover:border-white/20 transition-all"
-                  >
-                    <svg
-                      class="w-3.5 h-3.5"
-                      fill="none"
-                      stroke="currentColor"
-                      viewBox="0 0 24 24"
-                    >
-                      <path
-                        stroke-linecap="round"
-                        stroke-linejoin="round"
-                        stroke-width="2"
-                        d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.066 2.573c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.573 1.066c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.066-2.573c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"
-                      />
-                      <path
-                        stroke-linecap="round"
-                        stroke-linejoin="round"
-                        stroke-width="2"
-                        d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"
-                      />
-                    </svg>
-                    <span id="quality-label"></span>
-                    <svg
-                      class="w-3 h-3"
-                      fill="none"
-                      stroke="currentColor"
-                      viewBox="0 0 24 24"
-                    >
-                      <path
-                        stroke-linecap="round"
-                        stroke-linejoin="round"
-                        stroke-width="2"
-                        d="M19 9l-7 7-7-7"
-                      />
-                    </svg>
-                  </button>
-                  <div
-                    id="quality-menu"
-                    class="hidden absolute bottom-full right-0 mb-2 py-1 rounded-lg bg-dark-800 border border-white/10 shadow-xl min-w-[100px] z-50"
-                  >
-                    <button
-                      data-quality="1440p"
-                      data-src="https://v.fireshare.net/_content/video/c35114e0f7a3675b47a987027fa523bd.mp4"
-                      class="quality-opt w-full text-left px-3 py-1.5 text-xs text-white hover:bg-white/10 transition-colors flex items-center justify-between"
-                    >
-                      <span>1440p</span
-                      ><span class="text-[10px] text-gray-500 ml-2"
-                        >Original</span
-                      >
-                    </button>
-                    <button
-                      data-quality="1080p"
-                      data-src="https://v.fireshare.net/_content/derived/c35114e0f7a3675b47a987027fa523bd/c35114e0f7a3675b47a987027fa523bd-1080p.mp4"
-                      class="quality-opt w-full text-left px-3 py-1.5 text-xs text-gray-400 hover:text-white hover:bg-white/10 transition-colors"
-                    >
-                      1080p
-                    </button>
-                    <button
-                      data-quality="720p"
-                      data-src="https://v.fireshare.net/_content/derived/c35114e0f7a3675b47a987027fa523bd/c35114e0f7a3675b47a987027fa523bd-720p.mp4"
-                      class="quality-opt w-full text-left px-3 py-1.5 text-xs text-gray-400 hover:text-white hover:bg-white/10 transition-colors"
-                    >
-                      720p
-                    </button>
-                    <button
-                      data-quality="480p"
-                      data-src="https://v.fireshare.net/_content/derived/c35114e0f7a3675b47a987027fa523bd/c35114e0f7a3675b47a987027fa523bd-480p.mp4"
-                      class="quality-opt w-full text-left px-3 py-1.5 text-xs text-gray-400 hover:text-white hover:bg-white/10 transition-colors"
-                    >
-                      480p
-                    </button>
-                  </div>
-                </div>
-                <a
-                  href="https://v.fireshare.net/w/c35114e0f7a3675b47a987027fa523bd"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  class="text-xs text-fire-400 hover:text-fire-300 transition-colors flex items-center gap-1"
-                >
-                  Open on demo site
-                  <svg
-                    class="w-3 h-3"
-                    fill="none"
-                    stroke="currentColor"
-                    viewBox="0 0 24 24"
-                  >
-                    <path
-                      stroke-linecap="round"
-                      stroke-linejoin="round"
-                      stroke-width="2"
-                      d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"
-                    />
-                  </svg>
-                </a>
-              </div>
+              Copy link. Paste. Done.
+            </h3>
+            <p class="mt-4 text-gray-400 leading-relaxed">
+              Open a clip, grab its URL, and it plays in the browser for anyone
+              you send it to — with a real title, thumbnail and inline player
+              when it unfurls in Discord, Slack or Twitter. Trim the dead air
+              off the front first if you want — the crop is reversible.
+            </p>
+            <ul class="mt-6 space-y-2.5 text-[14px] text-gray-400">
+              <li class="flex gap-2.5">
+                <span class="text-fire-400">·</span>Per-file privacy: public,
+                link-only, or password
+              </li>
+              <li class="flex gap-2.5">
+                <span class="text-fire-400">·</span>Open Graph previews that
+                embed instead of showing a bare URL
+              </li>
+              <li class="flex gap-2.5">
+                <span class="text-fire-400">·</span>Titles, descriptions, tags
+                and custom thumbnails
+              </li>
+            </ul>
+          </div>
+          <div class="lg:col-span-7 reveal">
+            <div class="shot">
+              <picture>
+                <source srcset="assets/images/editing.webp" type="image/webp" />
+                <img
+                  src="assets/images/editing.png"
+                  alt="A clip open in Fireshare with its share link, game, tags, thumbnail picker and a trim timeline"
+                  width="2560"
+                  height="1368"
+                  class="w-full block"
+                  loading="lazy"
+                />
+              </picture>
             </div>
           </div>
-          <p class="text-center text-xs text-gray-600 mt-4">
-            Streaming from
+        </div>
+
+        <!-- 2 -->
+        <div
+          class="mt-20 md:mt-28 grid lg:grid-cols-12 gap-10 items-center"
+        >
+          <div class="lg:col-span-5 lg:order-2 reveal">
+            <span
+              class="font-mono text-[12px] text-fire-400/80 tracking-widest"
+              >02 / ORGANIZE</span
+            >
+            <h3
+              class="mt-3 text-2xl sm:text-3xl font-bold text-white tracking-[-0.02em]"
+            >
+              It sorts your clips by game, on its own
+            </h3>
+            <p class="mt-4 text-gray-400 leading-relaxed">
+              Fireshare reads what you dropped in and groups it by game, pulling
+              cover art automatically. Four hundred clips stop being a wall of
+              <code class="text-gray-300 text-[13px]">2026-03-05_20-05-14</code>
+              and turn into shelves you can actually browse.
+            </p>
+            <ul class="mt-6 space-y-2.5 text-[14px] text-gray-400">
+              <li class="flex gap-2.5">
+                <span class="text-fire-400">·</span>Automatic game detection
+                with cover art
+              </li>
+              <li class="flex gap-2.5">
+                <span class="text-fire-400">·</span>Tags, folders and search
+                across titles, tags and games
+              </li>
+              <li class="flex gap-2.5">
+                <span class="text-fire-400">·</span>Images get the same
+                treatment — gallery, lightbox, links
+              </li>
+            </ul>
+          </div>
+          <div class="lg:col-span-7 lg:order-1 reveal">
+            <div class="shot">
+              <picture>
+                <source srcset="assets/images/games.webp" type="image/webp" />
+                <img
+                  src="assets/images/games.png"
+                  alt="Fireshare's game view: a grid of cover art for ARC Raiders, Battlefield 6, Helldivers 2, Overwatch and more"
+                  width="2560"
+                  height="1368"
+                  class="w-full block"
+                  loading="lazy"
+                />
+              </picture>
+            </div>
+          </div>
+        </div>
+
+        <!-- 3 -->
+        <div class="mt-20 md:mt-28 grid lg:grid-cols-12 gap-10 items-center">
+          <div class="lg:col-span-5 reveal">
+            <span
+              class="font-mono text-[12px] text-fire-400/80 tracking-widest"
+              >03 / PEOPLE</span
+            >
+            <h3
+              class="mt-3 text-2xl sm:text-3xl font-bold text-white tracking-[-0.02em]"
+            >
+              Hand out accounts, not your admin password
+            </h3>
+            <p class="mt-4 text-gray-400 leading-relaxed">
+              New in v1.8.0: invite your squad with a link. Each of them gets a
+              profile page at
+              <code class="text-gray-300 text-[13px]">/u/username</code> showing
+              their own uploads, and you decide exactly what they're allowed to
+              do. Settings and user management stay yours.
+            </p>
+            <div class="mt-6 flex flex-wrap gap-2">
+              <span
+                class="font-mono text-[11.5px] px-2.5 py-1 rounded-md bg-fire-500/10 border border-fire-500/20 text-fire-400"
+                >upload</span
+              >
+              <span
+                class="font-mono text-[11.5px] px-2.5 py-1 rounded-md bg-fire-500/10 border border-fire-500/20 text-fire-400"
+                >view_private</span
+              >
+              <span
+                class="font-mono text-[11.5px] px-2.5 py-1 rounded-md bg-fire-500/10 border border-fire-500/20 text-fire-400"
+                >edit_own</span
+              >
+              <span
+                class="font-mono text-[11.5px] px-2.5 py-1 rounded-md bg-fire-500/10 border border-fire-500/20 text-fire-400"
+                >delete_own</span
+              >
+              <span
+                class="font-mono text-[11.5px] px-2.5 py-1 rounded-md bg-white/5 border hairline text-gray-500"
+                >edit_any</span
+              >
+              <span
+                class="font-mono text-[11.5px] px-2.5 py-1 rounded-md bg-white/5 border hairline text-gray-500"
+                >manage_tags</span
+              >
+              <span
+                class="font-mono text-[11.5px] px-2.5 py-1 rounded-md bg-white/5 border hairline text-gray-500"
+                >transcode</span
+              >
+              <span
+                class="font-mono text-[11.5px] px-2.5 py-1 rounded-md bg-white/5 border hairline text-gray-500"
+                >manage_library</span
+              >
+            </div>
+            <p class="mt-4 text-[13px] text-gray-500">
+              Ten capability keys, or three presets — Viewer, Contributor,
+              Curator.
+            </p>
+          </div>
+          <div class="lg:col-span-7 reveal">
+            <div class="shot">
+              <picture>
+                <source
+                  srcset="assets/images/uploading.webp"
+                  type="image/webp"
+                />
+                <img
+                  src="assets/images/uploading.png"
+                  alt="Uploading a clip to Fireshare, choosing whether it lands in the public or private feed"
+                  width="2560"
+                  height="1368"
+                  class="w-full block"
+                  loading="lazy"
+                />
+              </picture>
+            </div>
+          </div>
+        </div>
+
+        <!-- 4 -->
+        <div
+          class="mt-20 md:mt-28 grid lg:grid-cols-12 gap-10 items-center"
+        >
+          <div class="lg:col-span-5 lg:order-2 reveal">
+            <span
+              class="font-mono text-[12px] text-fire-400/80 tracking-widest"
+              >04 / OWN IT</span
+            >
+            <h3
+              class="mt-3 text-2xl sm:text-3xl font-bold text-white tracking-[-0.02em]"
+            >
+              Still just files, in a folder, on your server
+            </h3>
+            <p class="mt-4 text-gray-400 leading-relaxed">
+              No opaque blob store, no external database to run. Point Fireshare
+              at a directory and it scans what's there. The file manager gives
+              you bulk moves, privacy changes and transcode cleanup — and if you
+              ever walk away, your clips are exactly where you left them.
+            </p>
+            <ul class="mt-6 space-y-2.5 text-[14px] text-gray-400">
+              <li class="flex gap-2.5">
+                <span class="text-fire-400">·</span>Optional transcoding, CPU or
+                NVIDIA NVENC, off by default
+              </li>
+              <li class="flex gap-2.5">
+                <span class="text-fire-400">·</span>Viewers pick a quality;
+                buffering drops them down automatically
+              </li>
+              <li class="flex gap-2.5">
+                <span class="text-fire-400">·</span>PUID/PGID so files stay
+                owned by you, not root
+              </li>
+            </ul>
+          </div>
+          <div class="lg:col-span-7 lg:order-1 reveal">
+            <div class="shot">
+              <picture>
+                <source
+                  srcset="assets/images/file-manager.webp"
+                  type="image/webp"
+                />
+                <img
+                  src="assets/images/file-manager.png"
+                  alt="Fireshare's file manager listing clips with size, duration, resolution, transcodes and privacy"
+                  width="2560"
+                  height="1368"
+                  class="w-full block"
+                  loading="lazy"
+                />
+              </picture>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ LIVE DEMO ============ -->
+    <section
+      id="demo"
+      class="relative py-20 md:py-28 border-t hairline bg-white/[0.012]"
+    >
+      <div class="max-w-5xl mx-auto px-5">
+        <div class="max-w-2xl reveal">
+          <h2
+            class="rule text-3xl sm:text-[2.6rem] font-extrabold text-white tracking-[-0.03em] leading-[1.1]"
+          >
+            This clip is coming off a Fireshare box right now
+          </h2>
+          <p class="mt-5 text-gray-400 text-lg leading-relaxed">
+            Not YouTube, not a CDN. It's streaming from
             <a
               href="https://v.fireshare.net"
               target="_blank"
               rel="noopener noreferrer"
-              class="text-gray-500 hover:text-gray-400 underline underline-offset-2"
+              class="text-fire-400 hover:text-fire-300 underline underline-offset-4 decoration-fire-400/30"
               >v.fireshare.net</a
-            >
-            — the public Fireshare demo instance
+            >, a public instance running the same container you're about to
+            install. Switch the quality — those are the transcodes.
           </p>
         </div>
-      </div>
-    </section>
 
-    <!-- ===== FEATURES ===== -->
-    <section id="features" class="relative py-24 md:py-32">
-      <div class="max-w-7xl mx-auto px-6">
-        <div class="text-center fade-up mb-16">
-          <h2 class="text-3xl sm:text-4xl font-extrabold text-white">
-            What's included
-          </h2>
-          <p class="mt-4 text-gray-400 text-lg max-w-2xl mx-auto">
-            Built to cover real use cases without unnecessary complexity.
-          </p>
-        </div>
-        <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div
+          class="mt-10 reveal rounded-2xl overflow-hidden border hairline bg-dark-900 shadow-2xl"
+        >
           <div
-            class="feature-card fade-up rounded-2xl bg-dark-800/60 border border-white/5 p-6"
+            class="flex items-center gap-3 px-4 h-11 border-b hairline bg-white/[0.02]"
           >
-            <div class="flex items-center gap-3 mb-4">
-              <div
-                class="w-10 h-10 rounded-lg bg-fire-500/10 flex items-center justify-center shrink-0"
-              >
-                <svg
-                  class="w-5 h-5 text-fire-400"
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
-                >
-                  <path
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                    stroke-width="2"
-                    d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1"
-                  />
-                </svg>
-              </div>
-              <h3 class="text-white font-semibold text-lg">
-                Unique shareable links
-              </h3>
+            <div class="hidden sm:flex gap-1.5" aria-hidden="true">
+              <span class="w-2.5 h-2.5 rounded-full bg-white/10"></span>
+              <span class="w-2.5 h-2.5 rounded-full bg-white/10"></span>
+              <span class="w-2.5 h-2.5 rounded-full bg-white/10"></span>
             </div>
-            <p class="text-gray-400 text-sm leading-relaxed">
-              Every file gets its own URL. Paste it in Discord, a chat, or an
-              email — no login required to view.
-            </p>
-          </div>
-          <div
-            class="feature-card fade-up rounded-2xl bg-dark-800/60 border border-white/5 p-6"
-          >
-            <div class="flex items-center gap-3 mb-4">
+            <div class="flex-1 flex justify-center min-w-0">
               <div
-                class="w-10 h-10 rounded-lg bg-fire-500/10 flex items-center justify-center shrink-0"
+                class="flex items-center gap-2 bg-black/40 rounded-md px-3 py-1 text-[11.5px] text-gray-500 font-mono max-w-full"
               >
                 <svg
-                  class="w-5 h-5 text-fire-400"
+                  class="w-3 h-3 text-emerald-500 shrink-0"
                   fill="none"
                   stroke="currentColor"
+                  stroke-width="2"
                   viewBox="0 0 24 24"
                 >
                   <path
                     stroke-linecap="round"
                     stroke-linejoin="round"
-                    stroke-width="2"
                     d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"
                   />
                 </svg>
-              </div>
-              <h3 class="text-white font-semibold text-lg">
-                Public &amp; private feeds
-              </h3>
-            </div>
-            <p class="text-gray-400 text-sm leading-relaxed">
-              Choose what's visible to the public and what stays behind a link.
-              Private files are only reachable via direct URL.
-            </p>
-          </div>
-          <div
-            class="feature-card fade-up rounded-2xl bg-dark-800/60 border border-white/5 p-6"
-          >
-            <div class="flex items-center gap-3 mb-4">
-              <div
-                class="w-10 h-10 rounded-lg bg-fire-500/10 flex items-center justify-center shrink-0"
-              >
-                <svg
-                  class="w-5 h-5 text-fire-400"
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
+                <span class="truncate"
+                  >v.fireshare.net/w/c35114e0f7a3675b47a987027fa523bd</span
                 >
-                  <path
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                    stroke-width="2"
-                    d="M15 7a2 2 0 012 2m4 0a6 6 0 01-7.743 5.743L11 17H9v2H7v2H4a1 1 0 01-1-1v-2.586a1 1 0 01.293-.707l5.964-5.964A6 6 0 1121 9z"
-                  />
-                </svg>
               </div>
-              <h3 class="text-white font-semibold text-lg">
-                Password protection
-              </h3>
             </div>
-            <p class="text-gray-400 text-sm leading-relaxed">
-              Lock individual videos behind a password. The link still works —
-              it just asks for a key first.
-            </p>
+            <div class="hidden sm:block w-[54px]"></div>
           </div>
-          <div
-            class="feature-card fade-up rounded-2xl bg-dark-800/60 border border-white/5 p-6"
-          >
-            <div class="flex items-center gap-3 mb-4">
-              <div
-                class="w-10 h-10 rounded-lg bg-fire-500/10 flex items-center justify-center shrink-0"
-              >
-                <svg
-                  class="w-5 h-5 text-fire-400"
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
-                >
-                  <path
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                    stroke-width="2"
-                    d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"
-                  />
-                </svg>
-              </div>
-              <h3 class="text-white font-semibold text-lg">
-                Game organization
-              </h3>
-            </div>
-            <p class="text-gray-400 text-sm leading-relaxed">
-              Clips sort automatically by game with cover art from SteamGridDB.
-              No manual tagging needed.
-            </p>
-          </div>
-          <div
-            class="feature-card fade-up rounded-2xl bg-dark-800/60 border border-white/5 p-6"
-          >
-            <div class="flex items-center gap-3 mb-4">
-              <div
-                class="w-10 h-10 rounded-lg bg-fire-500/10 flex items-center justify-center shrink-0"
-              >
-                <svg
-                  class="w-5 h-5 text-fire-400"
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
-                >
-                  <path
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                    stroke-width="2"
-                    d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4"
-                  />
-                </svg>
-              </div>
-              <h3 class="text-white font-semibold text-lg">
-                Rich link previews
-              </h3>
-            </div>
-            <p class="text-gray-400 text-sm leading-relaxed">
-              Links embed correctly on Discord, Twitter, Slack, and most chat
-              apps. No raw URLs in conversations.
-            </p>
-          </div>
-          <div
-            class="feature-card fade-up rounded-2xl bg-dark-800/60 border border-white/5 p-6"
-          >
-            <div class="flex items-center gap-3 mb-4">
-              <div
-                class="w-10 h-10 rounded-lg bg-fire-500/10 flex items-center justify-center shrink-0"
-              >
-                <svg
-                  class="w-5 h-5 text-fire-400"
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
-                >
-                  <path
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                    stroke-width="2"
-                    d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"
-                  />
-                </svg>
-              </div>
-              <h3 class="text-white font-semibold text-lg">
-                Video transcoding
-              </h3>
-            </div>
-            <p class="text-gray-400 text-sm leading-relaxed">
-              Optional transcoding for browser compatibility. CPU or GPU — your
-              choice.
-            </p>
-          </div>
-          <div
-            class="feature-card fade-up rounded-2xl bg-dark-800/60 border border-white/5 p-6"
-          >
-            <div class="flex items-center gap-3 mb-4">
-              <div
-                class="w-10 h-10 rounded-lg bg-fire-500/10 flex items-center justify-center shrink-0"
-              >
-                <svg
-                  class="w-5 h-5 text-fire-400"
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
-                >
-                  <path
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                    stroke-width="2"
-                    d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"
-                  />
-                </svg>
-              </div>
-              <h3 class="text-white font-semibold text-lg">
-                Multi-user support
-              </h3>
-            </div>
-            <p class="text-gray-400 text-sm leading-relaxed">
-              Give friends or teammates their own accounts. Invite them with a
-              link, and every upload is attributed to whoever added it.
-            </p>
-          </div>
-          <div
-            class="feature-card fade-up rounded-2xl bg-dark-800/60 border border-white/5 p-6"
-          >
-            <div class="flex items-center gap-3 mb-4">
-              <div
-                class="w-10 h-10 rounded-lg bg-fire-500/10 flex items-center justify-center shrink-0"
-              >
-                <svg
-                  class="w-5 h-5 text-fire-400"
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
-                >
-                  <path
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                    stroke-width="2"
-                    d="M5.121 17.804A13.937 13.937 0 0112 16c2.5 0 4.847.655 6.879 1.804M15 10a3 3 0 11-6 0 3 3 0 016 0zm6 2a9 9 0 11-18 0 9 9 0 0118 0z"
-                  />
-                </svg>
-              </div>
-              <h3 class="text-white font-semibold text-lg">User profiles</h3>
-            </div>
-            <p class="text-gray-400 text-sm leading-relaxed">
-              Every account gets a shareable profile with an avatar, banner, and
-              its own videos, images, and games.
-            </p>
-          </div>
-          <div
-            class="feature-card fade-up rounded-2xl bg-dark-800/60 border border-white/5 p-6"
-          >
-            <div class="flex items-center gap-3 mb-4">
-              <div
-                class="w-10 h-10 rounded-lg bg-fire-500/10 flex items-center justify-center shrink-0"
-              >
-                <svg
-                  class="w-5 h-5 text-fire-400"
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
-                >
-                  <path
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                    stroke-width="2"
-                    d="M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4"
-                  />
-                </svg>
-              </div>
-              <h3 class="text-white font-semibold text-lg">
-                User permissions
-              </h3>
-            </div>
-            <p class="text-gray-400 text-sm leading-relaxed">
-              Grant each account only what it needs — upload, edit, delete, or
-              view-only. Settings and user management stay admin-only.
-            </p>
-          </div>
-        </div>
 
-        <!-- Hidden features -->
-        <div
-          id="features-extra"
-          class="grid sm:grid-cols-2 lg:grid-cols-3 gap-6 mt-6 hidden"
-        >
-          <div
-            class="feature-card fade-up rounded-2xl bg-dark-800/60 border border-white/5 p-6"
-          >
-            <div class="flex items-center gap-3 mb-4">
-              <div
-                class="w-10 h-10 rounded-lg bg-fire-500/10 flex items-center justify-center shrink-0"
-              >
-                <svg
-                  class="w-5 h-5 text-fire-400"
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
-                >
-                  <path
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                    stroke-width="2"
-                    d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"
-                  />
-                </svg>
-              </div>
-              <h3 class="text-white font-semibold text-lg">Web upload</h3>
-            </div>
-            <p class="text-gray-400 text-sm leading-relaxed">
-              Upload directly through the browser. Optionally restrict uploads
-              to admins only.
-            </p>
-          </div>
-          <div
-            class="feature-card fade-up rounded-2xl bg-dark-800/60 border border-white/5 p-6"
-          >
-            <div class="flex items-center gap-3 mb-4">
-              <div
-                class="w-10 h-10 rounded-lg bg-fire-500/10 flex items-center justify-center shrink-0"
-              >
-                <svg
-                  class="w-5 h-5 text-fire-400"
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
-                >
-                  <path
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                    stroke-width="2"
-                    d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"
-                  />
-                  <path
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                    stroke-width="2"
-                    d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"
-                  />
-                </svg>
-              </div>
-              <h3 class="text-white font-semibold text-lg">View counts</h3>
-            </div>
-            <p class="text-gray-400 text-sm leading-relaxed">
-              Every video tracks its own view count. No third-party analytics
-              scripts needed.
-            </p>
-          </div>
-          <div
-            class="feature-card fade-up rounded-2xl bg-dark-800/60 border border-white/5 p-6"
-          >
-            <div class="flex items-center gap-3 mb-4">
-              <div
-                class="w-10 h-10 rounded-lg bg-fire-500/10 flex items-center justify-center shrink-0"
-              >
-                <svg
-                  class="w-5 h-5 text-fire-400"
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
-                >
-                  <path
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                    stroke-width="2"
-                    d="M12 18h.01M8 21h8a2 2 0 002-2V5a2 2 0 00-2-2H8a2 2 0 00-2 2v14a2 2 0 002 2z"
-                  />
-                </svg>
-              </div>
-              <h3 class="text-white font-semibold text-lg">
-                Mobile responsive
-              </h3>
-            </div>
-            <p class="text-gray-400 text-sm leading-relaxed">
-              Fully responsive — the library, the player, and the admin UI all
-              work on phones.
-            </p>
-          </div>
-          <div
-            class="feature-card fade-up rounded-2xl bg-dark-800/60 border border-white/5 p-6"
-          >
-            <div class="flex items-center gap-3 mb-4">
-              <div
-                class="w-10 h-10 rounded-lg bg-fire-500/10 flex items-center justify-center shrink-0"
-              >
-                <svg
-                  class="w-5 h-5 text-fire-400"
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
-                >
-                  <path
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                    stroke-width="2"
-                    d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z"
-                  />
-                </svg>
-              </div>
-              <h3 class="text-white font-semibold text-lg">
-                Tags &amp; search
-              </h3>
-            </div>
-            <p class="text-gray-400 text-sm leading-relaxed">
-              Tag videos and search across your whole library. Filtering works
-              across titles, tags, and games.
-            </p>
-          </div>
-          <div
-            class="feature-card fade-up rounded-2xl bg-dark-800/60 border border-white/5 p-6"
-          >
-            <div class="flex items-center gap-3 mb-4">
-              <div
-                class="w-10 h-10 rounded-lg bg-fire-500/10 flex items-center justify-center shrink-0"
-              >
-                <svg
-                  class="w-5 h-5 text-fire-400"
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
-                >
-                  <path
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                    stroke-width="2"
-                    d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"
-                  />
-                </svg>
-              </div>
-              <h3 class="text-white font-semibold text-lg">Discord webhooks</h3>
-            </div>
-            <p class="text-gray-400 text-sm leading-relaxed">
-              Get notified on Discord when a new video lands. Works with any
-              webhook-compatible service.
-            </p>
-          </div>
-          <div
-            class="feature-card fade-up rounded-2xl bg-dark-800/60 border border-white/5 p-6"
-          >
-            <div class="flex items-center gap-3 mb-4">
-              <div
-                class="w-10 h-10 rounded-lg bg-fire-500/10 flex items-center justify-center shrink-0"
-              >
-                <svg
-                  class="w-5 h-5 text-fire-400"
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
-                >
-                  <path
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                    stroke-width="2"
-                    d="M6 5c7.18 0 13 5.82 13 13M6 11a7 7 0 017 7m-6 0a1 1 0 110-2 1 1 0 010 2z"
-                  />
-                </svg>
-              </div>
-              <h3 class="text-white font-semibold text-lg">RSS feeds</h3>
-            </div>
-            <p class="text-gray-400 text-sm leading-relaxed">
-              Public videos have an RSS feed. Plug it into any feed reader or
-              automation tool.
-            </p>
-          </div>
-          <div
-            class="feature-card fade-up rounded-2xl bg-dark-800/60 border border-white/5 p-6"
-          >
-            <div class="flex items-center gap-3 mb-4">
-              <div
-                class="w-10 h-10 rounded-lg bg-fire-500/10 flex items-center justify-center shrink-0"
-              >
-                <svg
-                  class="w-5 h-5 text-fire-400"
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
-                >
-                  <path
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                    stroke-width="2"
-                    d="M3 7v10a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-6l-2-2H5a2 2 0 00-2 2z"
-                  />
-                </svg>
-              </div>
-              <h3 class="text-white font-semibold text-lg">Folder sharing</h3>
-            </div>
-            <p class="text-gray-400 text-sm leading-relaxed">
-              Share a whole folder as one link instead of picking files
-              individually. New additions show up automatically.
-            </p>
-          </div>
-          <div
-            class="feature-card fade-up rounded-2xl bg-dark-800/60 border border-white/5 p-6"
-          >
-            <div class="flex items-center gap-3 mb-4">
-              <div
-                class="w-10 h-10 rounded-lg bg-fire-500/10 flex items-center justify-center shrink-0"
-              >
-                <svg
-                  class="w-5 h-5 text-fire-400"
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
-                >
-                  <path
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                    stroke-width="2"
-                    d="M6 2v14a2 2 0 002 2h14M18 22V8a2 2 0 00-2-2H2"
-                  />
-                </svg>
-              </div>
-              <h3 class="text-white font-semibold text-lg">Video cropping</h3>
-            </div>
-            <p class="text-gray-400 text-sm leading-relaxed">
-              Trim and crop videos right in the browser before sharing. No
-              external editor required.
-            </p>
-          </div>
-          <div
-            class="feature-card fade-up rounded-2xl bg-dark-800/60 border border-white/5 p-6"
-          >
-            <div class="flex items-center gap-3 mb-4">
-              <div
-                class="w-10 h-10 rounded-lg bg-fire-500/10 flex items-center justify-center shrink-0"
-              >
-                <svg
-                  class="w-5 h-5 text-fire-400"
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
-                >
-                  <path
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                    stroke-width="2"
-                    d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"
-                  />
-                </svg>
-              </div>
-              <h3 class="text-white font-semibold text-lg">
-                Two-factor authentication
-              </h3>
-            </div>
-            <p class="text-gray-400 text-sm leading-relaxed">
-              Secure accounts with TOTP codes from any authenticator app, on
-              top of a password.
-            </p>
-          </div>
-          <div
-            class="feature-card fade-up rounded-2xl bg-dark-800/60 border border-white/5 p-6"
-          >
-            <div class="flex items-center gap-3 mb-4">
-              <div
-                class="w-10 h-10 rounded-lg bg-fire-500/10 flex items-center justify-center shrink-0"
-              >
-                <svg
-                  class="w-5 h-5 text-fire-400"
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
-                >
-                  <path
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                    stroke-width="2"
-                    d="M3.055 11H5a2 2 0 012 2v1a2 2 0 002 2 2 2 0 012 2v2.945M8 3.935V5.5A2.5 2.5 0 0010.5 8h.5a2 2 0 012 2 2 2 0 104 0 2 2 0 012-2h1.064M15 20.488V18a2 2 0 012-2h3.064M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
-                  />
-                </svg>
-              </div>
-              <h3 class="text-white font-semibold text-lg">
-                Login IP whitelisting
-              </h3>
-            </div>
-            <p class="text-gray-400 text-sm leading-relaxed">
-              Restrict logins to trusted IP addresses or ranges for an extra
-              layer of account security.
-            </p>
-          </div>
-        </div>
-
-        <div class="text-center mt-10">
-          <button
-            id="features-toggle"
-            class="inline-flex items-center gap-2 px-6 py-3 rounded-full border border-white/10 text-sm font-medium text-gray-400 hover:text-white hover:border-white/20 transition-all"
-          >
-            <span>Show all features</span>
-            <svg
-              class="w-4 h-4 transition-transform"
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
+          <div class="bg-black">
+            <video
+              id="demo-video"
+              class="aspect-video w-full"
+              controls
+              preload="metadata"
+              playsinline
+              poster="https://v.fireshare.net/_content/derived/c35114e0f7a3675b47a987027fa523bd/poster.jpg"
             >
-              <path
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                stroke-width="2"
-                d="M19 9l-7 7-7-7"
-              />
-            </svg>
-          </button>
-        </div>
-      </div>
-    </section>
-
-    <!-- ===== SCREENSHOTS ===== -->
-    <section id="screenshots" class="relative py-24 md:py-32 overflow-hidden">
-      <div
-        class="absolute inset-0 bg-gradient-to-b from-dark-950 via-dark-900/50 to-dark-950"
-      ></div>
-      <div class="relative max-w-7xl mx-auto px-6">
-        <div class="text-center fade-up mb-16">
-          <h2 class="text-3xl sm:text-4xl font-extrabold text-white">
-            What it looks like
-          </h2>
-          <p class="mt-4 text-gray-400 text-lg max-w-2xl mx-auto">
-            Browse by video, image, or game. Click any screenshot to see it full
-            size.
-          </p>
-        </div>
-
-        <div class="fade-up relative max-w-4xl mx-auto">
-          <div class="overflow-hidden rounded-xl">
-            <div id="screenshots-track" class="screenshots-track">
-              <div class="px-2">
-                <div
-                  class="rounded-xl overflow-hidden screenshot-glow gradient-border"
-                >
-                  <picture>
-                    <source
-                      srcset="assets/images/cards.webp"
-                      type="image/webp"
-                    />
-                    <img
-                      src="assets/images/cards.png"
-                      alt="Dashboard Video View"
-                      class="w-full"
-                      loading="lazy"
-                    />
-                  </picture>
-                </div>
-              </div>
-              <div class="px-2">
-                <div
-                  class="rounded-xl overflow-hidden screenshot-glow gradient-border"
-                >
-                  <picture>
-                    <source
-                      srcset="assets/images/images-view.webp"
-                      type="image/webp"
-                    />
-                    <img
-                      src="assets/images/images-view.png"
-                      alt="Images View"
-                      class="w-full"
-                      loading="lazy"
-                    />
-                  </picture>
-                </div>
-              </div>
-              <div class="px-2">
-                <div
-                  class="rounded-xl overflow-hidden screenshot-glow gradient-border"
-                >
-                  <picture>
-                    <source
-                      srcset="assets/images/image-modal.webp"
-                      type="image/webp"
-                    />
-                    <img
-                      src="assets/images/image-modal.png"
-                      alt="Image Modal"
-                      class="w-full"
-                      loading="lazy"
-                    />
-                  </picture>
-                </div>
-              </div>
-              <div class="px-2">
-                <div
-                  class="rounded-xl overflow-hidden screenshot-glow gradient-border"
-                >
-                  <picture>
-                    <source
-                      srcset="assets/images/games.webp"
-                      type="image/webp"
-                    />
-                    <img
-                      src="assets/images/games.png"
-                      alt="Game Organization"
-                      class="w-full"
-                      loading="lazy"
-                    />
-                  </picture>
-                </div>
-              </div>
-              <div class="px-2">
-                <div
-                  class="rounded-xl overflow-hidden screenshot-glow gradient-border"
-                >
-                  <picture>
-                    <source
-                      srcset="assets/images/editing.webp"
-                      type="image/webp"
-                    />
-                    <img
-                      src="assets/images/editing.png"
-                      alt="Video Editing &amp; Details"
-                      class="w-full"
-                      loading="lazy"
-                    />
-                  </picture>
-                </div>
-              </div>
-              <div class="px-2">
-                <div
-                  class="rounded-xl overflow-hidden screenshot-glow gradient-border"
-                >
-                  <picture>
-                    <source
-                      srcset="assets/images/uploading.webp"
-                      type="image/webp"
-                    />
-                    <img
-                      src="assets/images/uploading.png"
-                      alt="Video Uploading"
-                      class="w-full"
-                      loading="lazy"
-                    />
-                  </picture>
-                </div>
-              </div>
-              <div class="px-2">
-                <div
-                  class="rounded-xl overflow-hidden screenshot-glow gradient-border"
-                >
-                  <picture>
-                    <source
-                      srcset="assets/images/file-manager.webp"
-                      type="image/webp"
-                    />
-                    <img
-                      src="assets/images/file-manager.png"
-                      alt="File Manager"
-                      class="w-full"
-                      loading="lazy"
-                    />
-                  </picture>
-                </div>
-              </div>
-              <div class="px-2">
-                <div
-                  class="rounded-xl overflow-hidden screenshot-glow gradient-border"
-                >
-                  <picture>
-                    <source
-                      srcset="assets/images/image-modal.webp"
-                      type="image/webp"
-                    />
-                    <img
-                      src="assets/images/image-modal.png"
-                      alt="Image Modal"
-                      class="w-full"
-                      loading="lazy"
-                    />
-                  </picture>
-                </div>
-              </div>
-            </div>
+              <source src="" type="video/mp4" />
+              Your browser does not support the video element.
+            </video>
           </div>
 
-          <p
-            id="screenshot-caption"
-            class="mt-6 text-center text-gray-400 text-sm font-medium transition-opacity duration-300"
+          <div
+            class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 px-4 py-3 border-t hairline bg-white/[0.02]"
           >
-            Dashboard - Card View
-          </p>
-
-          <button
-            id="ss-prev"
-            class="hidden sm:block absolute top-1/2 -translate-y-1/2 sm:-left-14 p-2.5 rounded-full bg-dark-800/80 border border-white/10 text-gray-400 hover:text-white hover:bg-white/10 transition-all backdrop-blur-sm"
-            aria-label="Previous screenshot"
-          >
-            <svg
-              class="w-5 h-5"
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
-            >
-              <path
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                stroke-width="2"
-                d="M15 19l-7-7 7-7"
-              />
-            </svg>
-          </button>
-          <button
-            id="ss-next"
-            class="hidden sm:block absolute top-1/2 -translate-y-1/2 sm:-right-14 p-2.5 rounded-full bg-dark-800/80 border border-white/10 text-gray-400 hover:text-white hover:bg-white/10 transition-all backdrop-blur-sm"
-            aria-label="Next screenshot"
-          >
-            <svg
-              class="w-5 h-5"
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
-            >
-              <path
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                stroke-width="2"
-                d="M9 5l7 7-7 7"
-              />
-            </svg>
-          </button>
-
-          <div id="ss-dots" class="flex justify-center gap-2 mt-6">
-            <button
-              class="w-2 h-2 rounded-full bg-fire-500 transition-all"
-              data-index="0"
-              aria-label="Slide 1"
-            ></button>
-            <button
-              class="w-2 h-2 rounded-full bg-white/20 hover:bg-white/40 transition-all"
-              data-index="1"
-              aria-label="Slide 2"
-            ></button>
-            <button
-              class="w-2 h-2 rounded-full bg-white/20 hover:bg-white/40 transition-all"
-              data-index="2"
-              aria-label="Slide 3"
-            ></button>
-            <button
-              class="w-2 h-2 rounded-full bg-white/20 hover:bg-white/40 transition-all"
-              data-index="3"
-              aria-label="Slide 4"
-            ></button>
-            <button
-              class="w-2 h-2 rounded-full bg-white/20 hover:bg-white/40 transition-all"
-              data-index="4"
-              aria-label="Slide 5"
-            ></button>
-            <button
-              class="w-2 h-2 rounded-full bg-white/20 hover:bg-white/40 transition-all"
-              data-index="5"
-              aria-label="Slide 6"
-            ></button>
-            <button
-              class="w-2 h-2 rounded-full bg-white/20 hover:bg-white/40 transition-all"
-              data-index="6"
-              aria-label="Slide 7"
-            ></button>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <!-- ===== INSTALLATION ===== -->
-    <section id="install" class="relative py-24 md:py-32">
-      <div class="max-w-7xl mx-auto px-6">
-        <div class="text-center fade-up mb-16">
-          <h2 class="text-3xl sm:text-4xl font-extrabold text-white">
-            Up and running in minutes
-          </h2>
-          <p class="mt-4 text-gray-400 text-lg max-w-2xl mx-auto">
-            Fireshare runs in Docker. Mount your directories, set a password,
-            and you're done.
-          </p>
-        </div>
-
-        <!-- Unraid callout -->
-        <div class="fade-up mb-10">
-          <a
-            href="https://unraid.net/community/apps"
-            target="_blank"
-            rel="noopener noreferrer"
-            class="flex items-center justify-between gap-6 rounded-2xl bg-dark-800/60 border border-white/5 p-6 hover:bg-dark-800/80 transition-colors group gradient-border"
-          >
-            <div class="flex items-center gap-5">
-              <div
-                class="w-12 h-12 rounded-xl bg-[#F15A2C]/10 flex items-center justify-center shrink-0"
-              >
+            <div class="flex items-center gap-2.5 min-w-0">
+              <picture class="shrink-0">
+                <source srcset="assets/images/logo.webp" type="image/webp" />
                 <img
-                  src="https://cdn.simpleicons.org/unraid/F15A2C"
-                  alt="Unraid"
-                  class="w-7 h-7"
+                  src="assets/images/logo.png"
+                  alt=""
+                  width="639"
+                  height="899"
+                  class="h-5 w-auto"
                 />
-              </div>
-              <div>
-                <div class="flex items-center gap-2">
-                  <h3 class="text-white font-semibold">
-                    Available on Unraid Community Applications
-                  </h3>
-                  <span
-                    class="px-2 py-0.5 rounded-full bg-fire-500/10 text-fire-400 text-xs font-medium whitespace-nowrap shrink-0"
-                    >One-click install</span
+              </picture>
+              <span class="text-sm text-white font-medium truncate"
+                >Dude had 4 surveyor vaults!</span
+              >
+            </div>
+            <div class="flex items-center gap-3 justify-between sm:justify-end">
+              <div class="relative" id="quality-wrapper">
+                <button
+                  id="quality-btn"
+                  class="flex items-center gap-1.5 px-2.5 py-1 rounded-md border hairline bg-white/[0.03] text-[11.5px] font-mono text-gray-400 hover:text-white transition-colors"
+                >
+                  <span id="quality-label">720p</span>
+                  <svg
+                    class="w-3 h-3"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2"
+                    viewBox="0 0 24 24"
                   >
+                    <path
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      d="M19 9l-7 7-7-7"
+                    />
+                  </svg>
+                </button>
+                <div
+                  id="quality-menu"
+                  class="hidden absolute bottom-full right-0 mb-2 py-1 rounded-lg bg-dark-800 border hairline shadow-xl min-w-[112px] z-40"
+                >
+                  <button
+                    data-quality="1440p"
+                    data-src="https://v.fireshare.net/_content/video/c35114e0f7a3675b47a987027fa523bd.mp4"
+                    class="quality-opt w-full text-left px-3 py-1.5 text-[11.5px] font-mono text-gray-400 hover:text-white hover:bg-white/10 flex items-center justify-between gap-3"
+                  >
+                    1440p<span class="text-[10px] text-gray-600">original</span>
+                  </button>
+                  <button
+                    data-quality="1080p"
+                    data-src="https://v.fireshare.net/_content/derived/c35114e0f7a3675b47a987027fa523bd/c35114e0f7a3675b47a987027fa523bd-1080p.mp4"
+                    class="quality-opt w-full text-left px-3 py-1.5 text-[11.5px] font-mono text-gray-400 hover:text-white hover:bg-white/10"
+                  >
+                    1080p
+                  </button>
+                  <button
+                    data-quality="720p"
+                    data-src="https://v.fireshare.net/_content/derived/c35114e0f7a3675b47a987027fa523bd/c35114e0f7a3675b47a987027fa523bd-720p.mp4"
+                    class="quality-opt w-full text-left px-3 py-1.5 text-[11.5px] font-mono text-gray-400 hover:text-white hover:bg-white/10"
+                  >
+                    720p
+                  </button>
+                  <button
+                    data-quality="480p"
+                    data-src="https://v.fireshare.net/_content/derived/c35114e0f7a3675b47a987027fa523bd/c35114e0f7a3675b47a987027fa523bd-480p.mp4"
+                    class="quality-opt w-full text-left px-3 py-1.5 text-[11.5px] font-mono text-gray-400 hover:text-white hover:bg-white/10"
+                  >
+                    480p
+                  </button>
                 </div>
-                <p class="mt-1 text-gray-400 text-sm">
-                  Running Unraid? Install Fireshare directly from the Community
-                  Applications plugin — no command line needed.
-                </p>
               </div>
-            </div>
-            <svg
-              class="w-5 h-5 text-gray-500 group-hover:text-white group-hover:translate-x-1 transition-all shrink-0"
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
-            >
-              <path
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                stroke-width="2"
-                d="M9 5l7 7-7 7"
-              />
-            </svg>
-          </a>
-        </div>
-
-        <div class="grid lg:grid-cols-2 gap-8">
-          <!-- Docker Compose -->
-          <div class="fade-up max-w-full overflow-hidden">
-            <div class="rounded-2xl code-block p-6 relative">
-              <div class="flex items-center gap-2 mb-4">
-                <span class="text-gray-500 text-xs font-mono"
-                  >docker-compose.yml</span
-                >
-              </div>
-              <button
-                onclick="copyCode(this)"
-                class="copy-btn absolute top-4 right-4 p-2 rounded-lg bg-white/5 hover:bg-white/10 border border-white/10 text-gray-400 hover:text-white transition-all"
-                title="Copy to clipboard"
+              <a
+                href="https://v.fireshare.net/w/c35114e0f7a3675b47a987027fa523bd"
+                target="_blank"
+                rel="noopener noreferrer"
+                class="text-[12px] text-fire-400 hover:text-fire-300 flex items-center gap-1"
               >
+                Open the real page
                 <svg
-                  class="w-4 h-4 copy-icon"
+                  class="w-3 h-3"
                   fill="none"
                   stroke="currentColor"
+                  stroke-width="2"
                   viewBox="0 0 24 24"
                 >
                   <path
                     stroke-linecap="round"
                     stroke-linejoin="round"
-                    stroke-width="2"
-                    d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"
+                    d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"
                   />
                 </svg>
-                <svg
-                  class="w-4 h-4 check-icon hidden"
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
-                >
-                  <path
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                    stroke-width="2"
-                    d="M5 13l4 4L19 7"
-                  />
-                </svg>
-              </button>
-              <pre
-                class="text-sm font-mono leading-relaxed overflow-x-auto"
-              ><code><span class="text-gray-500">version:</span> <span class="text-green-400">"3"</span>
-<span class="text-gray-500">services:</span>
-  <span class="text-fire-400">fireshare:</span>
-    <span class="text-gray-500">image:</span> <span class="text-green-400">shaneisrael/fireshare:latest-lite</span>
-    <span class="text-gray-500">container_name:</span> <span class="text-green-400">fireshare</span>
-    <span class="text-gray-500">ports:</span>
-      - <span class="text-cyan-400">"8080:80"</span>
-    <span class="text-gray-500">environment:</span>
-      - <span class="text-cyan-400">ADMIN_USERNAME=admin</span>
-      - <span class="text-cyan-400">ADMIN_PASSWORD=admin</span>
-      - <span class="text-cyan-400">ENABLE_TRANSCODING=true</span>
-    <span class="text-gray-500">volumes:</span>
-      - <span class="text-cyan-400">./fireshare/data:/data</span>
-      - <span class="text-cyan-400">./fireshare/processed:/processed</span>
-      - <span class="text-cyan-400">./my/videos/folder:/videos</span>
-      - <span class="text-cyan-400">./my/images/folder:/images</span></code></pre>
+              </a>
             </div>
-            <p class="mt-4 text-center text-gray-500 text-sm">
-              Docker Compose (recommended)
-            </p>
-          </div>
-
-          <!-- Docker Run -->
-          <div class="fade-up max-w-full overflow-hidden">
-            <div class="rounded-2xl code-block p-6 relative">
-              <div class="flex items-center gap-2 mb-4">
-                <span class="text-gray-500 text-xs font-mono">terminal</span>
-              </div>
-              <button
-                onclick="copyCode(this)"
-                class="copy-btn absolute top-4 right-4 p-2 rounded-lg bg-white/5 hover:bg-white/10 border border-white/10 text-gray-400 hover:text-white transition-all"
-                title="Copy to clipboard"
-              >
-                <svg
-                  class="w-4 h-4 copy-icon"
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
-                >
-                  <path
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                    stroke-width="2"
-                    d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"
-                  />
-                </svg>
-                <svg
-                  class="w-4 h-4 check-icon hidden"
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
-                >
-                  <path
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                    stroke-width="2"
-                    d="M5 13l4 4L19 7"
-                  />
-                </svg>
-              </button>
-              <pre
-                class="text-sm font-mono leading-relaxed overflow-x-auto"
-              ><code><span class="text-gray-500">$</span> <span class="text-white">docker run</span> <span class="text-cyan-400">--name</span> fireshare \
-          <span class="text-cyan-400">-v</span> <span class="text-green-400">$(pwd)/fireshare/data:/data</span> \
-          <span class="text-cyan-400">-v</span> <span class="text-green-400">$(pwd)/fireshare/processed:/processed</span> \
-          <span class="text-cyan-400">-v</span> <span class="text-green-400">./my/videos/folder:/videos</span> \
-          <span class="text-cyan-400">-v</span> <span class="text-green-400">./my/images/folder:/images</span> \
-          <span class="text-cyan-400">-p</span> <span class="text-fire-400">8080:80</span> \
-          <span class="text-cyan-400">-e</span> <span class="text-green-400">ADMIN_USERNAME=admin</span> \
-          <span class="text-cyan-400">-e</span> <span class="text-green-400">ADMIN_PASSWORD=admin</span> \
-          <span class="text-cyan-400">-e</span> <span class="text-green-400">ENABLE_TRANSCODING=true</span> \
-          <span class="text-cyan-400">-d</span> <span class="text-white">shaneisrael/fireshare:latest-lite</span></code></pre>
-            </div>
-            <p class="mt-4 text-center text-gray-500 text-sm">
-              Docker Run (quick start)
-            </p>
           </div>
         </div>
-      </div>
-    </section>
 
-    <!-- ===== CTA ===== -->
-    <section id="support" class="relative py-24 md:py-32">
-      <div
-        class="absolute inset-0 bg-gradient-to-t from-dark-950 via-dark-900/50 to-dark-950"
-      ></div>
-      <div class="relative max-w-xl mx-auto px-6 text-center fade-up">
-        <picture>
-          <source srcset="assets/images/logo.webp" type="image/webp" />
-          <img
-            src="assets/images/logo.png"
-            alt="Fireshare"
-            class="h-16 mx-auto mb-6 opacity-90"
-          />
-        </picture>
-        <h2 class="text-3xl sm:text-4xl font-extrabold text-white">
-          Ready to set it up?
-        </h2>
-        <p class="mt-4 text-gray-400 text-lg">Free and open source.</p>
-        <p class="text-gray-400 text-lg">
-          No license, no limits, no subscription required.
-        </p>
-        <div class="mt-8 flex flex-wrap justify-center gap-4">
-          <a
-            href="https://github.com/ShaneIsrael/fireshare"
-            target="_blank"
-            rel="noopener noreferrer"
-            class="inline-flex items-center gap-2 px-8 py-3.5 rounded-xl bg-gradient-to-r from-fire-500 to-fire-600 hover:from-fire-400 hover:to-fire-500 text-white font-semibold shadow-lg shadow-fire-500/25 transition-all"
-          >
-            <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
-              <path
-                d="M12 0C5.374 0 0 5.373 0 12c0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23A11.509 11.509 0 0112 5.803c1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576C20.566 21.797 24 17.3 24 12c0-6.627-5.373-12-12-12z"
-              />
-            </svg>
-            View on GitHub
-          </a>
+        <p class="mt-6 text-center text-[13px] text-gray-500 reveal">
+          Want to poke around the whole library instead?
           <a
             href="https://demo.fireshare.net"
             target="_blank"
             rel="noopener noreferrer"
-            class="inline-flex items-center gap-2 px-8 py-3.5 rounded-xl bg-white/5 hover:bg-white/10 border border-white/10 text-white font-semibold transition-all"
+            class="text-gray-300 hover:text-white underline underline-offset-4 decoration-white/20"
+            >demo.fireshare.net</a
           >
-            <svg
-              class="w-5 h-5"
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
-            >
-              <path
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                stroke-width="2"
-                d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z"
-              />
-              <path
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                stroke-width="2"
-                d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
-              />
-            </svg>
-            Try the demo
-          </a>
-        </div>
-        <div class="mt-10 border-t border-white/5 pt-10">
-          <p class="text-sm text-gray-500 mb-4">
-            Enjoying Fireshare? Sponsoring helps cover the demo server and keeps
-            the project maintained.
+        </p>
+      </div>
+    </section>
+
+    <!-- ============ FEATURES ============ -->
+    <section id="features" class="relative py-20 md:py-28 border-t hairline">
+      <div class="max-w-6xl mx-auto px-5">
+        <div class="flex flex-wrap items-end justify-between gap-6 reveal">
+          <h2
+            class="rule text-3xl sm:text-[2.6rem] font-extrabold text-white tracking-[-0.03em] leading-[1.1]"
+          >
+            Everything in the box
+          </h2>
+          <p class="text-gray-500 text-sm max-w-sm">
+            No tiers, no add-ons, no feature held back for a pro plan. This is
+            the whole list.
           </p>
-          <a
-            href="https://github.com/sponsors/ShaneIsrael"
-            target="_blank"
-            rel="noopener noreferrer"
-            class="inline-flex items-center gap-2 px-6 py-3 rounded-xl bg-pink-500/10 hover:bg-pink-500/20 border border-pink-500/20 text-pink-400 hover:text-pink-300 font-semibold transition-all text-sm"
+        </div>
+
+        <div class="mt-14 grid sm:grid-cols-2 lg:grid-cols-4 gap-x-8 gap-y-12">
+          <div class="reveal">
+            <h3
+              class="text-[12px] uppercase tracking-[0.16em] font-bold text-fire-400 pb-3 mb-5 border-b hairline"
+            >
+              Sharing
+            </h3>
+            <ul class="space-y-3 text-[14px] text-gray-400">
+              <li>A unique link per video and image</li>
+              <li>Public, link-only, or password-protected</li>
+              <li>Rich embeds in Discord, Slack &amp; Twitter</li>
+              <li>Share a whole folder as one link</li>
+              <li>RSS feed of new public clips</li>
+              <li>Discord &amp; webhook notifications</li>
+              <li>Per-video view counts</li>
+            </ul>
+          </div>
+
+          <div class="reveal">
+            <h3
+              class="text-[12px] uppercase tracking-[0.16em] font-bold text-fire-400 pb-3 mb-5 border-b hairline"
+            >
+              Library
+            </h3>
+            <ul class="space-y-3 text-[14px] text-gray-400">
+              <li>Automatic game sorting with cover art</li>
+              <li>Tags and full-library search</li>
+              <li>Image gallery with lightbox</li>
+              <li>In-browser trim &amp; crop</li>
+              <li>Custom thumbnails and descriptions</li>
+              <li>Bulk file manager with folders</li>
+              <li>Drag-and-drop web upload</li>
+            </ul>
+          </div>
+
+          <div class="reveal">
+            <h3
+              class="text-[12px] uppercase tracking-[0.16em] font-bold text-fire-400 pb-3 mb-5 border-b hairline"
+            >
+              People
+            </h3>
+            <ul class="space-y-3 text-[14px] text-gray-400">
+              <li>Multi-user accounts</li>
+              <li>Ten granular permission keys</li>
+              <li>Viewer / Contributor / Curator presets</li>
+              <li>Shareable profile pages</li>
+              <li>Avatars and banners</li>
+              <li>Single-use invite links</li>
+              <li>Upload attribution per file</li>
+            </ul>
+          </div>
+
+          <div class="reveal">
+            <h3
+              class="text-[12px] uppercase tracking-[0.16em] font-bold text-fire-400 pb-3 mb-5 border-b hairline"
+            >
+              Your server
+            </h3>
+            <ul class="space-y-3 text-[14px] text-gray-400">
+              <li>One Docker container</li>
+              <li>No external database</li>
+              <li>CPU or NVIDIA NVENC transcoding</li>
+              <li>Adaptive quality on buffering</li>
+              <li>Two-factor authentication (TOTP)</li>
+              <li>Login IP whitelisting</li>
+              <li>PUID/PGID file ownership</li>
+            </ul>
+          </div>
+        </div>
+
+        <p class="mt-14 text-[13px] text-gray-500 reveal">
+          Plays <code class="text-gray-400">.mp4</code>,
+          <code class="text-gray-400">.m4v</code>,
+          <code class="text-gray-400">.mov</code> and
+          <code class="text-gray-400">.webm</code> (H.264, H.265, AV1, VP9) —
+          the original file is always what gets served.
+        </p>
+      </div>
+    </section>
+
+    <!-- ============ INSTALL ============ -->
+    <section
+      id="install"
+      class="relative py-20 md:py-28 border-t hairline bg-white/[0.012]"
+    >
+      <div class="max-w-6xl mx-auto px-5">
+        <div class="max-w-2xl reveal">
+          <h2
+            class="rule text-3xl sm:text-[2.6rem] font-extrabold text-white tracking-[-0.03em] leading-[1.1]"
           >
-            <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
-              <path
-                d="M12 21.593c-.169-.197-3.77-3.374-5.812-5.55C4.503 14.226 3 12.348 3 10a5 5 0 0 1 9-3 5 5 0 0 1 9 3c0 2.348-1.503 4.226-3.188 6.043C15.77 18.219 12.169 21.396 12 21.593z"
-              />
-            </svg>
-            Sponsor on GitHub
-          </a>
-          <div class="mt-4">
+            Three steps, one container
+          </h2>
+          <p class="mt-5 text-gray-400 text-lg leading-relaxed">
+            If you've run anything in Docker before, this is a five-minute job.
+            If you're on Unraid, it's a button.
+          </p>
+        </div>
+
+        <!-- Steps -->
+        <ol class="mt-12 grid sm:grid-cols-3 gap-5 reveal">
+          <li class="rounded-xl border hairline bg-white/[0.02] p-5">
+            <span class="font-mono text-[12px] text-fire-400">01</span>
+            <h3 class="mt-2 text-white font-semibold">Pick your folders</h3>
+            <p class="mt-2 text-[13.5px] text-gray-500 leading-relaxed">
+              One for clips, one for images, plus two small ones Fireshare uses
+              for its database and generated posters.
+            </p>
+          </li>
+          <li class="rounded-xl border hairline bg-white/[0.02] p-5">
+            <span class="font-mono text-[12px] text-fire-400">02</span>
+            <h3 class="mt-2 text-white font-semibold">Start the container</h3>
+            <p class="mt-2 text-[13.5px] text-gray-500 leading-relaxed">
+              Copy the compose file below, change the paths and the admin
+              password, then
+              <code class="text-gray-400">docker compose up -d</code>.
+            </p>
+          </li>
+          <li class="rounded-xl border hairline bg-white/[0.02] p-5">
+            <span class="font-mono text-[12px] text-fire-400">03</span>
+            <h3 class="mt-2 text-white font-semibold">Open it and log in</h3>
+            <p class="mt-2 text-[13.5px] text-gray-500 leading-relaxed">
+              Visit <code class="text-gray-400">http://localhost:8080</code>.
+              Drop a clip in, hit copy, paste it to a friend.
+            </p>
+          </li>
+        </ol>
+
+        <!-- Tabs -->
+        <div class="mt-10 reveal">
+          <div class="flex flex-wrap gap-2" role="tablist">
+            <button
+              class="tab on px-4 h-9 rounded-lg border hairline bg-white/[0.03] text-[13px] font-medium text-gray-400 transition-colors"
+              data-tab="compose"
+              role="tab"
+            >
+              Docker Compose
+            </button>
+            <button
+              class="tab px-4 h-9 rounded-lg border hairline bg-white/[0.03] text-[13px] font-medium text-gray-400 hover:text-white transition-colors"
+              data-tab="run"
+              role="tab"
+            >
+              docker run
+            </button>
+            <button
+              class="tab px-4 h-9 rounded-lg border hairline bg-white/[0.03] text-[13px] font-medium text-gray-400 hover:text-white transition-colors"
+              data-tab="unraid"
+              role="tab"
+            >
+              Unraid
+            </button>
+          </div>
+
+          <!-- Compose -->
+          <div data-panel="compose" class="mt-4">
+            <div class="rounded-2xl term border hairline overflow-hidden">
+              <div
+                class="flex items-center justify-between px-4 h-11 border-b hairline"
+              >
+                <span class="text-[11.5px] text-gray-500 font-mono"
+                  >docker-compose.yml</span
+                >
+                <button
+                  class="copy inline-flex items-center gap-1.5 text-[11.5px] font-medium text-gray-400 hover:text-white px-2 py-1 rounded-md hover:bg-white/5 transition-colors"
+                  data-copy="#cmd-compose"
+                >
+                  <svg
+                    class="w-3.5 h-3.5 i-copy"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"
+                    />
+                  </svg>
+                  <span class="label">Copy</span>
+                </button>
+              </div>
+              <pre
+                id="cmd-compose"
+                class="p-5 text-[12.5px] leading-[1.8] overflow-x-auto"
+              ><code><span class="text-gray-500">services:</span>
+  <span class="text-fire-400">fireshare:</span>
+    <span class="text-gray-500">image:</span> <span class="text-emerald-400">shaneisrael/fireshare:latest-lite</span>
+    <span class="text-gray-500">container_name:</span> <span class="text-emerald-400">fireshare</span>
+    <span class="text-gray-500">restart:</span> <span class="text-emerald-400">unless-stopped</span>
+    <span class="text-gray-500">ports:</span>
+      - <span class="text-emerald-400">"8080:80"</span>
+    <span class="text-gray-500">volumes:</span>
+      - <span class="text-emerald-400">/path/to/data:/data</span>
+      - <span class="text-emerald-400">/path/to/processed:/processed</span>
+      - <span class="text-emerald-400">/path/to/videos:/videos</span>
+      - <span class="text-emerald-400">/path/to/images:/images</span>
+    <span class="text-gray-500">environment:</span>
+      - <span class="text-emerald-400">ADMIN_USERNAME=admin</span>
+      - <span class="text-emerald-400">ADMIN_PASSWORD=changeme</span>
+      <span class="text-gray-600"># your public domain — needed for link previews</span>
+      - <span class="text-emerald-400">DOMAIN=clips.example.com</span>
+      <span class="text-gray-600"># run `id` on the host so files stay yours</span>
+      - <span class="text-emerald-400">PUID=1000</span>
+      - <span class="text-emerald-400">PGID=1000</span>
+      <span class="text-gray-600"># optional: extra qualities for slower connections</span>
+      - <span class="text-emerald-400">ENABLE_TRANSCODING=true</span></code></pre>
+            </div>
+          </div>
+
+          <!-- Run -->
+          <div data-panel="run" class="mt-4 hidden">
+            <div class="rounded-2xl term border hairline overflow-hidden">
+              <div
+                class="flex items-center justify-between px-4 h-11 border-b hairline"
+              >
+                <span class="text-[11.5px] text-gray-500 font-mono"
+                  >terminal</span
+                >
+                <button
+                  class="copy inline-flex items-center gap-1.5 text-[11.5px] font-medium text-gray-400 hover:text-white px-2 py-1 rounded-md hover:bg-white/5 transition-colors"
+                  data-copy="#cmd-run"
+                >
+                  <svg
+                    class="w-3.5 h-3.5 i-copy"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"
+                    />
+                  </svg>
+                  <span class="label">Copy</span>
+                </button>
+              </div>
+              <pre
+                id="cmd-run"
+                class="p-5 text-[12.5px] leading-[1.8] overflow-x-auto"
+              ><code><span class="text-white">docker run</span> <span class="text-fire-400">-d</span> <span class="text-fire-400">--name</span> fireshare \
+  <span class="text-fire-400">-p</span> <span class="text-emerald-400">8080:80</span> \
+  <span class="text-fire-400">-v</span> <span class="text-emerald-400">/path/to/data:/data</span> \
+  <span class="text-fire-400">-v</span> <span class="text-emerald-400">/path/to/processed:/processed</span> \
+  <span class="text-fire-400">-v</span> <span class="text-emerald-400">/path/to/videos:/videos</span> \
+  <span class="text-fire-400">-v</span> <span class="text-emerald-400">/path/to/images:/images</span> \
+  <span class="text-fire-400">-e</span> <span class="text-emerald-400">ADMIN_USERNAME=admin</span> \
+  <span class="text-fire-400">-e</span> <span class="text-emerald-400">ADMIN_PASSWORD=changeme</span> \
+  <span class="text-fire-400">-e</span> <span class="text-emerald-400">DOMAIN=clips.example.com</span> \
+  <span class="text-fire-400">-e</span> <span class="text-emerald-400">PUID=1000</span> <span class="text-fire-400">-e</span> <span class="text-emerald-400">PGID=1000</span> \
+  shaneisrael/fireshare:latest-lite</code></pre>
+            </div>
+          </div>
+
+          <!-- Unraid -->
+          <div data-panel="unraid" class="mt-4 hidden">
             <a
-              href="https://www.buymeacoffee.com/shaneisrael"
+              href="https://unraid.net/community/apps"
               target="_blank"
               rel="noopener noreferrer"
-              title="Buy me a coffee"
-              class="bmc-btn inline-flex items-center gap-2 px-6 py-3 rounded-xl text-sm font-semibold"
+              class="flex items-center justify-between gap-6 rounded-2xl border hairline bg-white/[0.02] hover:bg-white/[0.04] p-6 transition-colors group"
             >
+              <div class="flex items-center gap-5">
+                <span
+                  class="w-12 h-12 rounded-xl bg-[#F15A2C]/10 grid place-items-center shrink-0"
+                >
+                  <img
+                    src="https://cdn.simpleicons.org/unraid/F15A2C"
+                    alt=""
+                    width="28"
+                    height="28"
+                    class="w-7 h-7"
+                  />
+                </span>
+                <div>
+                  <h3 class="text-white font-semibold">
+                    Install from Community Applications
+                  </h3>
+                  <p class="mt-1 text-[13.5px] text-gray-500 leading-relaxed">
+                    Search “Fireshare” in the Apps tab, point the four paths at
+                    your shares, set a password. No command line at all. For
+                    NVENC, add the NVIDIA Driver plugin and
+                    <code class="text-gray-400">--gpus=all</code> in Extra
+                    Parameters.
+                  </p>
+                </div>
+              </div>
               <svg
-                class="w-5 h-5"
+                class="w-5 h-5 text-gray-600 group-hover:text-white group-hover:translate-x-1 transition-all shrink-0"
                 fill="none"
                 stroke="currentColor"
+                stroke-width="2"
                 viewBox="0 0 24 24"
               >
                 <path
                   stroke-linecap="round"
                   stroke-linejoin="round"
-                  stroke-width="2"
+                  d="M9 5l7 7-7 7"
+                />
+              </svg>
+            </a>
+          </div>
+        </div>
+
+        <div
+          class="mt-6 flex flex-wrap items-center gap-x-6 gap-y-2 text-[13px] text-gray-500 reveal"
+        >
+          <span
+            ><code class="text-gray-400">latest-lite</code> is the smaller
+            image — use <code class="text-gray-400">latest</code> for NVIDIA GPU
+            transcoding.</span
+          >
+          <a
+            href="https://github.com/ShaneIsrael/fireshare#installation"
+            target="_blank"
+            rel="noopener noreferrer"
+            class="text-fire-400 hover:text-fire-300"
+            >Full install docs →</a
+          >
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ FAQ ============ -->
+    <section id="faq" class="relative py-20 md:py-28 border-t hairline">
+      <div class="max-w-3xl mx-auto px-5">
+        <h2
+          class="rule reveal text-3xl sm:text-[2.6rem] font-extrabold text-white tracking-[-0.03em] leading-[1.1]"
+        >
+          Before you ask
+        </h2>
+
+        <div class="mt-12 divide-y divide-white/[0.07] border-y hairline">
+          <details class="group reveal">
+            <summary
+              class="flex items-center justify-between gap-6 py-5 text-white font-medium"
+            >
+              What hardware do I need?
+              <svg
+                class="chev w-4 h-4 text-gray-500 shrink-0 transition-transform"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  d="M19 9l-7 7-7-7"
+                />
+              </svg>
+            </summary>
+            <p class="pb-5 -mt-1 text-[14.5px] text-gray-400 leading-relaxed">
+              Anything that runs Docker and has disk space. Fireshare streams
+              the original file straight to the browser, so serving clips is
+              cheap — an old NUC or a NAS handles it fine. Transcoding is the
+              only heavy part, and it's off by default.
+            </p>
+          </details>
+
+          <details class="group reveal">
+            <summary
+              class="flex items-center justify-between gap-6 py-5 text-white font-medium"
+            >
+              Does it re-encode or compress my clips?
+              <svg
+                class="chev w-4 h-4 text-gray-500 shrink-0 transition-transform"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  d="M19 9l-7 7-7-7"
+                />
+              </svg>
+            </summary>
+            <p class="pb-5 -mt-1 text-[14.5px] text-gray-400 leading-relaxed">
+              No. Your original file is never modified and is what viewers get
+              by default. If you turn transcoding on, Fireshare writes
+              <em class="not-italic text-gray-300">additional</em> lower-quality
+              versions next to it so someone on hotel wifi can still watch.
+            </p>
+          </details>
+
+          <details class="group reveal">
+            <summary
+              class="flex items-center justify-between gap-6 py-5 text-white font-medium"
+            >
+              Do people need an account to watch?
+              <svg
+                class="chev w-4 h-4 text-gray-500 shrink-0 transition-transform"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  d="M19 9l-7 7-7-7"
+                />
+              </svg>
+            </summary>
+            <p class="pb-5 -mt-1 text-[14.5px] text-gray-400 leading-relaxed">
+              No. Anyone with the link can watch. Private media is link-only —
+              it stays out of feeds and listings but opens for whoever you sent
+              it to — and individual videos can also sit behind a password.
+              Accounts are only for people who upload or manage the library.
+            </p>
+          </details>
+
+          <details class="group reveal">
+            <summary
+              class="flex items-center justify-between gap-6 py-5 text-white font-medium"
+            >
+              What video formats work?
+              <svg
+                class="chev w-4 h-4 text-gray-500 shrink-0 transition-transform"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  d="M19 9l-7 7-7-7"
+                />
+              </svg>
+            </summary>
+            <p class="pb-5 -mt-1 text-[14.5px] text-gray-400 leading-relaxed">
+              MP4, M4V, MOV and WebM, encoded as H.264, H.265, AV1 or VP9 —
+              which covers what ShadowPlay, ReLive and your phone record by
+              default. Because the original is served straight to the browser,
+              it has to be something browsers can play, so MKV recordings need
+              remuxing to MP4 first.
+            </p>
+          </details>
+
+          <details class="group reveal">
+            <summary
+              class="flex items-center justify-between gap-6 py-5 text-white font-medium"
+            >
+              How do I share links outside my house?
+              <svg
+                class="chev w-4 h-4 text-gray-500 shrink-0 transition-transform"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  d="M19 9l-7 7-7-7"
+                />
+              </svg>
+            </summary>
+            <p class="pb-5 -mt-1 text-[14.5px] text-gray-400 leading-relaxed">
+              Put it behind whatever reverse proxy you already run — Nginx
+              Proxy Manager, Caddy, Traefik, a Cloudflare tunnel — and set the
+              <code class="text-gray-300">DOMAIN</code> variable to that
+              hostname so link previews point at the right place. Login IP
+              whitelisting and TOTP two-factor are built in for the admin side.
+            </p>
+          </details>
+
+          <details class="group reveal">
+            <summary
+              class="flex items-center justify-between gap-6 py-5 text-white font-medium"
+            >
+              Can I give other people accounts?
+              <svg
+                class="chev w-4 h-4 text-gray-500 shrink-0 transition-transform"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  d="M19 9l-7 7-7-7"
+                />
+              </svg>
+            </summary>
+            <p class="pb-5 -mt-1 text-[14.5px] text-gray-400 leading-relaxed">
+              Since v1.8.0, yes. Send an invite link or set a password for them,
+              then grant any mix of ten capabilities. Each account gets a
+              profile page of its own uploads. Settings and user management stay
+              admin-only.
+            </p>
+          </details>
+
+          <details class="group reveal">
+            <summary
+              class="flex items-center justify-between gap-6 py-5 text-white font-medium"
+            >
+              I'm on 1.7.x and I use LDAP. What happens?
+              <svg
+                class="chev w-4 h-4 text-gray-500 shrink-0 transition-transform"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  d="M19 9l-7 7-7-7"
+                />
+              </svg>
+            </summary>
+            <p class="pb-5 -mt-1 text-[14.5px] text-gray-400 leading-relaxed">
+              LDAP was removed in v1.8.0. Fireshare refuses to start while any
+              <code class="text-gray-300">LDAP_*</code> variable is still set,
+              before it touches your database — removing them is how you confirm
+              the upgrade. Each directory account is then converted to a local
+              one, keeping its uploads, profile and permissions, but with no
+              password: you set one or send an invite from Settings → Users.
+              If you still need a directory server, pin to 1.7.9.
+              <a
+                href="/changelog"
+                class="text-fire-400 hover:text-fire-300 underline underline-offset-4 decoration-fire-400/30"
+                >Read the release notes →</a
+              >
+            </p>
+          </details>
+
+          <details class="group reveal">
+            <summary
+              class="flex items-center justify-between gap-6 py-5 text-white font-medium"
+            >
+              Is it actually free?
+              <svg
+                class="chev w-4 h-4 text-gray-500 shrink-0 transition-transform"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  d="M19 9l-7 7-7-7"
+                />
+              </svg>
+            </summary>
+            <p class="pb-5 -mt-1 text-[14.5px] text-gray-400 leading-relaxed">
+              Yes — GPLv3, no paid tier, nothing held back. Sponsoring is
+              optional and pays for the public demo server and the weekends that
+              go into new releases.
+            </p>
+          </details>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ CTA ============ -->
+    <section class="relative py-20 md:py-28 border-t hairline overflow-hidden">
+      <div class="absolute inset-0 grid-bg opacity-60 pointer-events-none"></div>
+      <div class="relative max-w-3xl mx-auto px-5 text-center reveal">
+        <h2
+          class="text-3xl sm:text-5xl font-extrabold text-white tracking-[-0.03em] leading-[1.08]"
+        >
+          Your clips are already on a disk you own.
+        </h2>
+        <p class="mt-5 text-lg text-gray-400">
+          Give them a link that belongs to you too.
+        </p>
+
+        <div
+          class="mt-9 mx-auto max-w-xl rounded-xl term border hairline flex items-center gap-3 pl-4 pr-2 py-2.5 text-left"
+        >
+          <code
+            id="cmd-cta"
+            class="flex-1 text-[12.5px] text-gray-300 overflow-x-auto whitespace-nowrap"
+            ><span class="text-gray-600">$</span> docker run -d --name fireshare
+            -p 8080:80 ... shaneisrael/fireshare:latest-lite</code
+          >
+          <button
+            class="copy shrink-0 inline-flex items-center gap-1.5 h-8 px-3 rounded-lg bg-white/[0.06] hover:bg-white/[0.12] text-[12px] font-medium text-gray-300 hover:text-white transition-colors"
+            data-copy="#cmd-hero"
+          >
+            <svg
+              class="w-3.5 h-3.5 i-copy"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              viewBox="0 0 24 24"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"
+              />
+            </svg>
+            <span class="label">Copy</span>
+          </button>
+        </div>
+
+        <div class="mt-6 flex flex-wrap justify-center gap-3">
+          <a
+            href="#install"
+            class="inline-flex items-center gap-2 px-6 h-12 rounded-xl bg-gradient-to-r from-fire-400 to-fire-600 text-white font-semibold shadow-lg shadow-fire-500/25 hover:brightness-110 transition-all"
+          >
+            Full install guide
+          </a>
+          <a
+            href="https://github.com/ShaneIsrael/fireshare"
+            target="_blank"
+            rel="noopener noreferrer"
+            class="inline-flex items-center gap-2 px-6 h-12 rounded-xl border hairline bg-white/[0.03] hover:bg-white/[0.07] text-white font-semibold transition-colors"
+          >
+            <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
+              <path
+                d="M12 0C5.374 0 0 5.373 0 12c0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23A11.509 11.509 0 0112 5.803c1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576C20.566 21.797 24 17.3 24 12c0-6.627-5.373-12-12-12z"
+              />
+            </svg>
+            Star on GitHub
+          </a>
+        </div>
+
+        <div class="mt-14 pt-10 border-t hairline">
+          <p class="text-[13.5px] text-gray-500 max-w-md mx-auto">
+            Fireshare is built on weekends. Sponsoring keeps the demo server
+            online and the releases coming.
+          </p>
+          <div class="mt-5 flex flex-wrap justify-center gap-3">
+            <a
+              href="https://github.com/sponsors/ShaneIsrael"
+              target="_blank"
+              rel="noopener noreferrer"
+              class="inline-flex items-center gap-2 px-5 h-10 rounded-xl bg-pink-500/10 hover:bg-pink-500/20 border border-pink-500/20 text-pink-400 hover:text-pink-300 text-[13.5px] font-semibold transition-colors"
+            >
+              <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
+                <path
+                  d="M12 21.593c-.169-.197-3.77-3.374-5.812-5.55C4.503 14.226 3 12.348 3 10a5 5 0 0 1 9-3 5 5 0 0 1 9 3c0 2.348-1.503 4.226-3.188 6.043C15.77 18.219 12.169 21.396 12 21.593z"
+                />
+              </svg>
+              Sponsor on GitHub
+            </a>
+            <a
+              href="https://www.buymeacoffee.com/shaneisrael"
+              target="_blank"
+              rel="noopener noreferrer"
+              class="bmc-btn inline-flex items-center gap-2 px-5 h-10 rounded-xl text-[13.5px] font-semibold"
+            >
+              <svg
+                class="w-4 h-4"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
                   d="M18 8h1a4 4 0 010 8h-1M2 8h16v9a4 4 0 01-4 4H6a4 4 0 01-4-4V8zm4-4h8"
                 />
               </svg>
@@ -2035,25 +1899,38 @@
       </div>
     </section>
 
-    <!-- ===== FOOTER ===== -->
-    <footer class="border-t border-white/5 py-8">
+    <!-- ============ FOOTER ============ -->
+    <footer class="border-t hairline py-10">
       <div
-        class="max-w-7xl mx-auto px-6 flex flex-col sm:flex-row items-center justify-between gap-4 text-sm text-gray-500"
+        class="max-w-6xl mx-auto px-5 flex flex-col sm:flex-row items-center justify-between gap-5 text-[13px] text-gray-500"
       >
-        <div class="flex items-center gap-2">
+        <div class="flex items-center gap-2.5">
           <picture>
             <source srcset="assets/images/logo.webp" type="image/webp" />
-            <img src="assets/images/logo.png" alt="Fireshare" class="h-6" />
+            <img
+              src="assets/images/logo.png"
+              alt=""
+              width="639"
+              height="899"
+              class="h-5 w-auto"
+            />
           </picture>
-          <span>Fireshare &mdash; Open source, self-hosted video sharing.</span>
+          <span>Fireshare — self-hosted media sharing. GPLv3.</span>
         </div>
-        <div class="flex items-center gap-4">
+        <nav class="flex flex-wrap items-center justify-center gap-5">
           <a
             href="https://github.com/ShaneIsrael/fireshare"
             target="_blank"
             rel="noopener noreferrer"
             class="hover:text-gray-300 transition-colors"
             >GitHub</a
+          >
+          <a
+            href="https://hub.docker.com/r/shaneisrael/fireshare"
+            target="_blank"
+            rel="noopener noreferrer"
+            class="hover:text-gray-300 transition-colors"
+            >Docker Hub</a
           >
           <a
             href="https://demo.fireshare.net"
@@ -2066,492 +1943,244 @@
             >Changelog</a
           >
           <a
+            href="https://github.com/ShaneIsrael/fireshare/issues"
+            target="_blank"
+            rel="noopener noreferrer"
+            class="hover:text-gray-300 transition-colors"
+            >Report a bug</a
+          >
+          <a
             href="https://github.com/sponsors/ShaneIsrael"
             target="_blank"
             rel="noopener noreferrer"
             class="hover:text-gray-300 transition-colors"
             >Sponsor</a
           >
-        </div>
+        </nav>
       </div>
     </footer>
 
-    <!-- ===== LIGHTBOX MODAL ===== -->
+    <!-- ============ STICKY DOCK ============ -->
     <div
-      id="lightbox"
-      class="fixed inset-0 z-[100] hidden items-center justify-center bg-black/90 backdrop-blur-sm"
-      style="display: none"
+      id="dock"
+      class="fixed bottom-4 inset-x-4 sm:inset-x-auto sm:right-6 z-40 flex items-center gap-3 rounded-2xl border hairline bg-dark-900/95 backdrop-blur-xl px-4 py-3 shadow-2xl"
     >
+      <span class="hidden sm:block text-[13px] text-gray-400"
+        >Ready when you are</span
+      >
       <button
-        id="lb-close"
-        class="absolute top-4 right-4 p-2 rounded-full bg-white/10 hover:bg-white/20 text-white transition-all z-10"
-        aria-label="Close"
+        class="copy inline-flex items-center gap-2 h-9 px-3.5 rounded-lg border hairline bg-white/[0.04] hover:bg-white/[0.09] text-[13px] font-medium text-gray-200 transition-colors"
+        data-copy="#cmd-hero"
       >
         <svg
-          class="w-6 h-6"
+          class="w-4 h-4 i-copy"
           fill="none"
           stroke="currentColor"
+          stroke-width="2"
           viewBox="0 0 24 24"
         >
           <path
             stroke-linecap="round"
             stroke-linejoin="round"
-            stroke-width="2"
-            d="M6 18L18 6M6 6l12 12"
+            d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"
           />
         </svg>
+        <span class="label">Copy install command</span>
       </button>
-      <button
-        id="lb-prev"
-        class="absolute left-4 top-1/2 -translate-y-1/2 p-2.5 rounded-full bg-white/10 hover:bg-white/20 text-white transition-all z-10"
-        aria-label="Previous"
+      <a
+        href="#install"
+        class="inline-flex items-center h-9 px-4 rounded-lg bg-gradient-to-r from-fire-400 to-fire-600 text-white text-[13px] font-semibold hover:brightness-110 transition-all"
+        >Install</a
       >
-        <svg
-          class="w-6 h-6"
-          fill="none"
-          stroke="currentColor"
-          viewBox="0 0 24 24"
-        >
-          <path
-            stroke-linecap="round"
-            stroke-linejoin="round"
-            stroke-width="2"
-            d="M15 19l-7-7 7-7"
-          />
-        </svg>
-      </button>
-      <button
-        id="lb-next"
-        class="absolute right-4 top-1/2 -translate-y-1/2 p-2.5 rounded-full bg-white/10 hover:bg-white/20 text-white transition-all z-10"
-        aria-label="Next"
-      >
-        <svg
-          class="w-6 h-6"
-          fill="none"
-          stroke="currentColor"
-          viewBox="0 0 24 24"
-        >
-          <path
-            stroke-linecap="round"
-            stroke-linejoin="round"
-            stroke-width="2"
-            d="M9 5l7 7-7 7"
-          />
-        </svg>
-      </button>
-      <img
-        id="lb-img"
-        class="max-w-[90vw] max-h-[85vh] rounded-xl object-contain"
-        src=""
-        alt=""
-      />
-      <p
-        id="lb-caption"
-        class="absolute bottom-6 left-0 right-0 text-center text-white text-sm font-medium"
-      ></p>
     </div>
 
-    <!-- ===== SCRIPTS ===== -->
+    <!-- ============ SCRIPTS ============ -->
     <script>
-      // ── Theme switching ──
-      const themeColors = {
-        ember: "#F97316",
-        ocean: "#3B82F6",
-        amethyst: "#A855F7",
-        blaze: "#E03294",
-      };
-      function setTheme(theme) {
-        document.documentElement.setAttribute("data-theme", theme);
-        localStorage.setItem("fireshare-theme", theme);
-        document.querySelectorAll(".theme-option").forEach((btn) => {
-          btn.classList.toggle("active", btn.dataset.theme === theme);
-        });
-        const hex = (themeColors[theme] || themeColors.ember).replace("#", "");
-        document.querySelectorAll(".bmc-button").forEach((img) => {
-          img.src = img.src.replace(
-            /button_colour=[A-Fa-f0-9]{6}/,
-            "button_colour=" + hex,
-          );
-        });
-      }
-      setTheme(localStorage.getItem("fireshare-theme") || "blaze");
-
-      // Theme toggle (no-ops gracefully when button is commented out)
-      const themeBtn = document.getElementById("theme-toggle-btn");
-      const themeDropdown = document.getElementById("theme-dropdown");
-      if (themeBtn && themeDropdown) {
-        themeBtn.addEventListener("click", (e) => {
+      // ── Mobile menu ──
+      (() => {
+        const btn = document.getElementById("menu-btn");
+        const menu = document.getElementById("menu");
+        btn.addEventListener("click", (e) => {
           e.stopPropagation();
-          themeDropdown.classList.toggle("hidden");
+          const open = menu.classList.toggle("hidden");
+          btn.setAttribute("aria-expanded", String(!open));
         });
-        document.querySelectorAll(".theme-option").forEach((btn) => {
-          btn.addEventListener("click", () => {
-            setTheme(btn.dataset.theme);
-            themeDropdown.classList.add("hidden");
-          });
-        });
-        document.addEventListener("click", (e) => {
-          const wrapper = document.getElementById("theme-toggle-wrapper");
-          if (wrapper && !wrapper.contains(e.target)) {
-            themeDropdown.classList.add("hidden");
-          }
-        });
-      }
-
-      // ── Copy code button ──
-      function copyCode(btn) {
-        const code = btn
-          .closest(".code-block")
-          .querySelector("pre").textContent;
-        navigator.clipboard.writeText(code).then(() => {
-          btn.querySelector(".copy-icon").classList.add("hidden");
-          btn.querySelector(".check-icon").classList.remove("hidden");
-          btn.classList.add("text-green-400");
-          setTimeout(() => {
-            btn.querySelector(".copy-icon").classList.remove("hidden");
-            btn.querySelector(".check-icon").classList.add("hidden");
-            btn.classList.remove("text-green-400");
-          }, 2000);
-        });
-      }
-
-      // ── Mobile menu toggle ──
-      const menuBtn = document.getElementById("mobile-menu-btn");
-      const mobileMenu = document.getElementById("mobile-menu");
-      menuBtn.addEventListener("click", (e) => {
-        e.stopPropagation();
-        mobileMenu.classList.toggle("hidden");
-      });
-      mobileMenu.addEventListener("click", (e) => e.stopPropagation());
-      document.addEventListener("click", () => {
-        if (!mobileMenu.classList.contains("hidden")) {
-          mobileMenu.classList.add("hidden");
-        }
-      });
-      mobileMenu.querySelectorAll("a").forEach((link) => {
-        link.addEventListener("click", () =>
-          mobileMenu.classList.add("hidden"),
+        menu.querySelectorAll("a").forEach((a) =>
+          a.addEventListener("click", () => {
+            menu.classList.add("hidden");
+            btn.setAttribute("aria-expanded", "false");
+          }),
         );
+      })();
+
+      // ── Copy buttons ──
+      document.querySelectorAll(".copy").forEach((btn) => {
+        btn.addEventListener("click", async () => {
+          const src = document.querySelector(btn.dataset.copy);
+          if (!src) return;
+          const text = src.textContent.replace(/^\s*\$\s/gm, "").trim();
+          try {
+            await navigator.clipboard.writeText(text);
+          } catch {
+            return;
+          }
+          const label = btn.querySelector(".label");
+          const icon = btn.querySelector(".i-copy");
+          const was = label ? label.textContent : "";
+          if (label) label.textContent = "Copied";
+          if (icon) icon.style.opacity = "0.4";
+          btn.classList.add("text-emerald-400");
+          setTimeout(() => {
+            if (label) label.textContent = was;
+            if (icon) icon.style.opacity = "";
+            btn.classList.remove("text-emerald-400");
+          }, 1800);
+        });
       });
 
-      // ── Intersection Observer for fade-up animations ──
-      const observer = new IntersectionObserver(
-        (entries) => {
-          entries.forEach((entry) => {
-            if (entry.isIntersecting) {
-              const delay = entry.target.dataset.delay || 0;
-              setTimeout(() => {
-                entry.target.classList.add("visible");
-              }, delay);
-              observer.unobserve(entry.target);
-            }
+      // ── Install tabs ──
+      (() => {
+        const tabs = document.querySelectorAll(".tab");
+        tabs.forEach((tab) => {
+          tab.addEventListener("click", () => {
+            tabs.forEach((t) => t.classList.remove("on"));
+            tab.classList.add("on");
+            document.querySelectorAll("[data-panel]").forEach((p) => {
+              p.classList.toggle("hidden", p.dataset.panel !== tab.dataset.tab);
+            });
           });
-        },
-        { threshold: 0.1, rootMargin: "0px 0px -40px 0px" },
-      );
+        });
+      })();
 
-      document.querySelectorAll(".fade-up").forEach((el, i) => {
-        if (el.closest("#features .grid")) {
-          el.dataset.delay = (i % 4) * 100;
+      // ── Reveal on scroll ──
+      (() => {
+        const els = document.querySelectorAll(".reveal");
+        if (!("IntersectionObserver" in window)) {
+          els.forEach((el) => el.classList.add("in"));
+          return;
         }
-        observer.observe(el);
-      });
+        const io = new IntersectionObserver(
+          (entries) => {
+            entries.forEach((entry) => {
+              if (entry.isIntersecting) {
+                entry.target.classList.add("in");
+                io.unobserve(entry.target);
+              }
+            });
+          },
+          { threshold: 0.08, rootMargin: "0px 0px -60px 0px" },
+        );
+        els.forEach((el) => io.observe(el));
+        // Failsafe: nothing stays invisible if the observer never fires.
+        setTimeout(() => els.forEach((el) => el.classList.add("in")), 3000);
+      })();
 
-      // ── Nav active state on scroll ──
-      const navLinks = document.querySelectorAll("a.nav-link[data-nav]");
-      const sections = document.querySelectorAll(
-        "#features, #screenshots, #install, #demo",
-      );
-      const navObserver = new IntersectionObserver(
-        (entries) => {
-          entries.forEach((entry) => {
-            if (entry.isIntersecting) {
-              navLinks.forEach((link) => {
-                if (link.dataset.nav === entry.target.id) {
-                  link.classList.remove("text-gray-400");
-                  link.classList.add("text-white");
-                } else {
-                  link.classList.add("text-gray-400");
-                  link.classList.remove("text-white");
-                }
-              });
-            }
-          });
-        },
-        { threshold: 0, rootMargin: "-50% 0px -50% 0px" },
-      );
-      sections.forEach((s) => navObserver.observe(s));
+      // ── Sticky dock: show once the hero is behind you ──
+      (() => {
+        const dock = document.getElementById("dock");
+        const install = document.getElementById("install");
+        const hero = document.getElementById("top");
+        const update = () => {
+          const past = window.scrollY > hero.offsetHeight * 0.75;
+          const rect = install.getBoundingClientRect();
+          const onInstall = rect.top < window.innerHeight && rect.bottom > 0;
+          dock.classList.toggle("up", past && !onInstall);
+        };
+        update();
+        window.addEventListener("scroll", update, { passive: true });
+        window.addEventListener("resize", update);
+      })();
 
-      // ── Feature cards toggle ──
-      const featuresExtra = document.getElementById("features-extra");
-      const featuresToggle = document.getElementById("features-toggle");
-      featuresToggle.addEventListener("click", () => {
-        const isHidden = featuresExtra.classList.toggle("hidden");
-        featuresToggle.querySelector("span").textContent = isHidden
-          ? "Show all features"
-          : "Show fewer";
-        featuresToggle.querySelector("svg").style.transform = isHidden
-          ? ""
-          : "rotate(180deg)";
-        if (!isHidden) {
-          featuresExtra.querySelectorAll(".fade-up").forEach((el) => {
-            el.classList.add("visible");
-          });
-        }
-      });
-
-      // ── Demo video quality selector ──
+      // ── Demo video quality ──
       (() => {
         const video = document.getElementById("demo-video");
         const btn = document.getElementById("quality-btn");
         const menu = document.getElementById("quality-menu");
         const label = document.getElementById("quality-label");
-        const opts = document.querySelectorAll(".quality-opt");
+        const opts = [...document.querySelectorAll(".quality-opt")];
 
-        const defaultQuality = window.innerWidth < 768 ? "480p" : "720p";
-        const defaultOpt = Array.from(opts).find(
-          (o) => o.dataset.quality === defaultQuality,
-        );
-        if (defaultOpt) {
-          video.querySelector("source").src = defaultOpt.dataset.src;
-          video.load();
-          label.textContent = defaultQuality;
+        const mark = (q) => {
+          label.textContent = q;
           opts.forEach((o) => {
-            o.classList.toggle(
-              "text-white",
-              o.dataset.quality === defaultQuality,
-            );
-            o.classList.toggle(
-              "text-gray-400",
-              o.dataset.quality !== defaultQuality,
-            );
+            o.classList.toggle("text-white", o.dataset.quality === q);
+            o.classList.toggle("text-gray-400", o.dataset.quality !== q);
           });
+        };
+
+        const initial = window.innerWidth < 768 ? "480p" : "720p";
+        const first = opts.find((o) => o.dataset.quality === initial);
+        if (first) {
+          video.querySelector("source").src = first.dataset.src;
+          video.load();
+          mark(initial);
         }
 
         btn.addEventListener("click", (e) => {
           e.stopPropagation();
           menu.classList.toggle("hidden");
         });
-
-        document.addEventListener("click", () => menu.classList.add("hidden"));
         menu.addEventListener("click", (e) => e.stopPropagation());
+        document.addEventListener("click", () => menu.classList.add("hidden"));
 
         opts.forEach((opt) => {
           opt.addEventListener("click", () => {
-            const newSrc = opt.dataset.src;
-            const quality = opt.dataset.quality;
-            if (label.textContent === quality) {
-              menu.classList.add("hidden");
-              return;
-            }
-            const wasPlaying = !video.paused;
-            const currentTime = video.currentTime;
-            video.querySelector("source").src = newSrc;
+            const q = opt.dataset.quality;
+            menu.classList.add("hidden");
+            if (label.textContent === q) return;
+            const t = video.currentTime;
+            const playing = !video.paused;
+            video.querySelector("source").src = opt.dataset.src;
             video.load();
-            video.currentTime = currentTime;
             const resume = () => {
-              video.currentTime = currentTime;
-              if (wasPlaying) video.play();
+              video.currentTime = t;
+              if (playing) video.play();
               video.removeEventListener("canplay", resume);
             };
             video.addEventListener("canplay", resume);
-            label.textContent = quality;
-            opts.forEach((o) => {
-              o.classList.toggle("text-white", o.dataset.quality === quality);
-              o.classList.toggle(
-                "text-gray-400",
-                o.dataset.quality !== quality,
-              );
-            });
-            menu.classList.add("hidden");
+            mark(q);
           });
         });
       })();
 
-      // ── Screenshot carousel ──
-      (() => {
-        const track = document.getElementById("screenshots-track");
-        const captions = [
-          "Dashboard - Card View",
-          "Images View",
-          "Image Modal",
-          "Game Organization",
-          "Video Editing & Details",
-          "Video Uploading",
-          "File Manager",
-        ];
-        const captionEl = document.getElementById("screenshot-caption");
-        const dots = document.querySelectorAll("#ss-dots button");
-        const prevBtn = document.getElementById("ss-prev");
-        const nextBtn = document.getElementById("ss-next");
-        const total = captions.length;
-        let current = 0;
-
-        function goTo(index) {
-          current = ((index % total) + total) % total;
-          track.style.transform = `translateX(-${current * 100}%)`;
-          captionEl.textContent = captions[current];
-          dots.forEach((d, i) => {
-            d.className =
-              i === current
-                ? "w-2.5 h-2.5 rounded-full bg-fire-500 transition-all"
-                : "w-2 h-2 rounded-full bg-white/20 hover:bg-white/40 transition-all";
-          });
-        }
-
-        prevBtn.addEventListener("click", () => goTo(current - 1));
-        nextBtn.addEventListener("click", () => goTo(current + 1));
-        dots.forEach((d) =>
-          d.addEventListener("click", () => goTo(Number(d.dataset.index))),
-        );
-
-        let startX = 0;
-        track.addEventListener(
-          "touchstart",
-          (e) => {
-            startX = e.touches[0].clientX;
-          },
-          { passive: true },
-        );
-        track.addEventListener("touchend", (e) => {
-          const diff = startX - e.changedTouches[0].clientX;
-          if (Math.abs(diff) > 50) goTo(current + (diff > 0 ? 1 : -1));
-        });
-
-        document.addEventListener("keydown", (e) => {
-          if (e.key === "ArrowLeft") goTo(current - 1);
-          if (e.key === "ArrowRight") goTo(current + 1);
-        });
-
-        // ── Lightbox ──
-        const lightbox = document.getElementById("lightbox");
-        const lbImg = document.getElementById("lb-img");
-        const lbCaption = document.getElementById("lb-caption");
-        const lbClose = document.getElementById("lb-close");
-        const lbPrev = document.getElementById("lb-prev");
-        const lbNext = document.getElementById("lb-next");
-        const images = Array.from(track.querySelectorAll("img"));
-        let lbOpen = false;
-
-        function getLbSrc(i) {
-          const picture = images[i].closest("picture");
-          const source =
-            picture && picture.querySelector("source[type='image/webp']");
-          return source ? source.srcset : images[i].src;
-        }
-
-        function openLightbox(index) {
-          current = index;
-          lbImg.src = getLbSrc(current);
-          lbCaption.textContent = captions[current];
-          lightbox.style.display = "flex";
-          lbOpen = true;
-          document.body.style.overflow = "hidden";
-        }
-
-        function closeLightbox() {
-          lightbox.style.display = "none";
-          lbOpen = false;
-          document.body.style.overflow = "";
-          goTo(current);
-        }
-
-        function lbGoTo(index) {
-          current = ((index % total) + total) % total;
-          lbImg.src = getLbSrc(current);
-          lbCaption.textContent = captions[current];
-          goTo(current);
-        }
-
-        images.forEach((img, i) => {
-          img.style.cursor = "pointer";
-          img.addEventListener("click", () => openLightbox(i));
-        });
-
-        lbClose.addEventListener("click", closeLightbox);
-        lbPrev.addEventListener("click", () => lbGoTo(current - 1));
-        lbNext.addEventListener("click", () => lbGoTo(current + 1));
-        lightbox.addEventListener("click", (e) => {
-          if (e.target === lightbox) closeLightbox();
-        });
-
-        let lbStartX = 0;
-        lightbox.addEventListener(
-          "touchstart",
-          (e) => {
-            lbStartX = e.touches[0].clientX;
-          },
-          { passive: true },
-        );
-        lightbox.addEventListener("touchend", (e) => {
-          const diff = lbStartX - e.changedTouches[0].clientX;
-          if (Math.abs(diff) > 50) lbGoTo(current + (diff > 0 ? 1 : -1));
-        });
-
-        document.addEventListener("keydown", (e) => {
-          if (!lbOpen) return;
-          if (e.key === "Escape") closeLightbox();
-          if (e.key === "ArrowLeft") {
-            e.stopImmediatePropagation();
-            lbGoTo(current - 1);
-          }
-          if (e.key === "ArrowRight") {
-            e.stopImmediatePropagation();
-            lbGoTo(current + 1);
-          }
-        });
-      })();
-
-      // ── Smooth scroll offset for fixed nav ──
-      document.querySelectorAll('a[href^="#"]').forEach((anchor) => {
-        anchor.addEventListener("click", function (e) {
-          e.preventDefault();
-          const href = this.getAttribute("href");
-          if (href === "#") {
-            window.scrollTo({ top: 0, behavior: "smooth" });
-            return;
-          }
+      // ── Smooth anchor scroll with nav offset ──
+      document.querySelectorAll('a[href^="#"]').forEach((a) => {
+        a.addEventListener("click", (e) => {
+          const href = a.getAttribute("href");
+          if (href === "#" || href.length < 2) return;
           const target = document.querySelector(href);
-          if (target) {
-            const navHeight = 80;
-            const top =
-              target.getBoundingClientRect().top +
-              window.pageYOffset -
-              navHeight;
-            window.scrollTo({ top, behavior: "smooth" });
-          }
+          if (!target) return;
+          e.preventDefault();
+          window.scrollTo({
+            top: target.getBoundingClientRect().top + window.scrollY - 72,
+            behavior: "smooth",
+          });
         });
       });
 
-      // ── Fetch live stats ──
-      function formatNumber(n) {
-        if (n >= 1e6) return (n / 1e6).toFixed(1).replace(/\.0$/, "") + "M";
-        if (n >= 1e3) return (n / 1e3).toFixed(1).replace(/\.0$/, "") + "K";
-        return n.toLocaleString();
-      }
-      fetch("https://img.shields.io/github/stars/ShaneIsrael/fireshare.json")
-        .then((r) => r.json())
-        .then((data) => {
-          if (data.value)
-            document.getElementById("stat-stars").textContent = data.value;
-        })
-        .catch(() => {});
-      fetch(
-        "https://img.shields.io/github/v/release/ShaneIsrael/fireshare.json",
-      )
-        .then((r) => r.json())
-        .then((data) => {
-          if (data.value)
-            document.getElementById("stat-version").textContent = data.value;
-        })
-        .catch(() => {});
-      fetch("https://img.shields.io/docker/pulls/shaneisrael/fireshare.json")
-        .then((r) => r.json())
-        .then((data) => {
-          if (data.value)
-            document.getElementById("stat-pulls").textContent = data.value;
-        })
-        .catch(() => {});
+      // ── Live stats (fall back to the numbers already in the markup) ──
+      (() => {
+        const put = (key, value) =>
+          document
+            .querySelectorAll(`[data-stat="${key}"]`)
+            .forEach((el) => (el.textContent = value));
+        const grab = (url, key) =>
+          fetch(url)
+            .then((r) => r.json())
+            .then((d) => d.value && put(key, d.value))
+            .catch(() => {});
+        grab(
+          "https://img.shields.io/github/stars/ShaneIsrael/fireshare.json",
+          "stars",
+        );
+        grab(
+          "https://img.shields.io/docker/pulls/shaneisrael/fireshare.json",
+          "pulls",
+        );
+        grab(
+          "https://img.shields.io/github/v/release/ShaneIsrael/fireshare.json",
+          "version",
+        );
+      })();
     </script>
   </body>
 </html>
