@@ -381,9 +381,11 @@
               <span
                 class="px-2 py-0.5 rounded-full bg-fire-500/15 text-fire-400 font-semibold font-mono text-[11.5px]"
                 data-stat="version"
-                >v1.8.0</span
+                >v1.8.1</span
               >
-              Multi-user accounts, permissions &amp; profiles
+              <span data-stat="release-title"
+                >Uploader visibility and smarter game matching</span
+              >
               <span class="hidden sm:inline text-gray-600">·</span>
               <a
                 href="/changelog"
@@ -2176,10 +2178,37 @@
           "https://img.shields.io/docker/pulls/shaneisrael/fireshare.json",
           "pulls",
         );
-        grab(
-          "https://img.shields.io/github/v/release/ShaneIsrael/fireshare.json",
-          "version",
-        );
+
+        // The version pill and the line beside it both come from the latest
+        // release: its tag, and the first heading in its notes. Whatever is in
+        // the markup stays put if the request fails.
+        const headline = (body) => {
+          const heading = (body || "")
+            .split("\n")
+            .map((line) => line.trim())
+            .find((line) => /^#{1,6}\s+\S/.test(line));
+          if (!heading) return "";
+          const text = heading
+            .replace(/^#{1,6}\s+/, "")
+            .replace(/\s*#+$/, "")
+            .replace(/\[([^\]]+)\]\([^)]*\)/g, "$1")
+            .replace(/\*\*|__|`/g, "")
+            .trim();
+          return text.length > 64
+            ? text.slice(0, 63).replace(/[\s,;:—-]+\S*$/, "") + "…"
+            : text;
+        };
+        fetch(
+          "https://api.github.com/repos/ShaneIsrael/fireshare/releases/latest",
+          { headers: { Accept: "application/vnd.github+json" } },
+        )
+          .then((r) => (r.ok ? r.json() : Promise.reject(r.status)))
+          .then((release) => {
+            if (release.tag_name) put("version", release.tag_name);
+            const title = headline(release.body);
+            if (title) put("release-title", title);
+          })
+          .catch(() => {});
       })();
     </script>
   </body>
