@@ -9,16 +9,16 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/ShaneIsrael/fireshare.github.io.git"
+    "url": "git+https://github.com/fireshare-app/fireshare.github.io.git"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "type": "commonjs",
   "bugs": {
-    "url": "https://github.com/ShaneIsrael/fireshare.github.io/issues"
+    "url": "https://github.com/fireshare-app/fireshare.github.io/issues"
   },
-  "homepage": "https://github.com/ShaneIsrael/fireshare.github.io#readme",
+  "homepage": "https://github.com/fireshare-app/fireshare.github.io#readme",
   "devDependencies": {
     "tailwindcss": "^3.4.19"
   }
